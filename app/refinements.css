@@ -38,3 +38,7 @@ footer>p{font-size:clamp(4rem,8.5vw,9rem);line-height:.8;margin-bottom:clamp(55p
 .experience-labels{grid-template-columns:34% 1fr auto}.experience-labels span:last-child{margin-left:0;padding-right:9%}
 .brand-section h2{font-size:clamp(2.8rem,5vw,5.5rem);max-width:none;white-space:nowrap}
 @media(max-width:700px){.brand-section h2{white-space:normal}.project-visual .project-caption{padding:35px 14px 14px}}
+
+.site-header{border-bottom:0}
+.all-works{display:flex;justify-content:center;margin-left:auto;margin-right:auto;width:50%}
+@media(max-width:700px){.all-works{width:100%}}
