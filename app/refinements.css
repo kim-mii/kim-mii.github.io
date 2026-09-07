@@ -12,3 +12,10 @@ nav a{background:var(--blush);border-color:var(--blush)}
 footer{background:var(--blush);min-height:40vh;padding-top:clamp(60px,7vw,90px);padding-bottom:25px}
 footer>p{font-size:clamp(4rem,8.5vw,9rem);line-height:.8;margin-bottom:clamp(55px,6vw,85px);white-space:nowrap}
 @media(max-width:700px){.project-grid{display:grid}.project{margin:0}.project-visual,.project--tall .project-visual,.project--compact .project-visual{height:44vw;min-height:155px}.know-heading h2.statement{font-size:2.25rem}.hero{padding-left:24px;padding-right:24px}footer>p{font-size:3.5rem;white-space:normal}}
+
+.hero{min-height:60vh;padding-top:clamp(54px,7vw,105px);padding-bottom:60px}
+.hero h1 span{position:relative;background:none}
+.hero h1 span::after{background:repeating-linear-gradient(135deg,var(--mist) 0 4px,transparent 4px 7px,var(--mist) 7px 10px);bottom:.02em;content:'';height:.09em;left:0;position:absolute;width:100%;z-index:-1}
+.hero h1>i{background:linear-gradient(transparent 76%,var(--blush) 0)}
+.clusters{grid-template-columns:1fr}.clusters>div:first-child{width:100%}.clusters ul{columns:3}.clusters .tools-label{margin-top:28px}.clusters .tools-list{columns:3}
+@media(max-width:700px){.hero{min-height:42vh;padding-top:55px;padding-bottom:45px}.clusters ul,.clusters .tools-list{columns:2}}
