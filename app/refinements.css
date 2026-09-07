@@ -28,3 +28,13 @@ footer>p{font-size:clamp(4rem,8.5vw,9rem);line-height:.8;margin-bottom:clamp(55p
 .project:nth-child(3) .project-visual{height:clamp(390px,42vw,650px)}
 .project:nth-child(4) .project-visual{height:clamp(315px,34vw,540px)}
 @media(max-width:700px){.project-grid{grid-template-columns:1fr}.project:nth-child(n){grid-column:auto;grid-row:auto}.project:nth-child(n) .project-visual{height:62vw;min-height:0}}
+
+.site-header{background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hero h1 span::after{left:-1%;width:102%}
+.project-visual{box-shadow:none}.project-visual .project-caption{align-items:end;background:linear-gradient(transparent,rgba(67,75,75,.68));bottom:0;color:#fff;left:0;opacity:0;padding:48px 22px 20px;position:absolute;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease;width:100%;z-index:3}
+.project:hover .project-visual,.project:focus-visible .project-visual{box-shadow:inset 0 0 0 999px rgba(61,70,70,.18)}
+.project:hover .project-caption,.project:focus-visible .project-caption{opacity:1;transform:translateY(0)}
+.project-visual .project-caption h3{color:#fff}.project-visual .project-caption p,.project-visual .project-caption>span{color:rgba(255,255,255,.76)}
+.experience-labels{grid-template-columns:34% 1fr auto}.experience-labels span:last-child{margin-left:0;padding-right:9%}
+.brand-section h2{font-size:clamp(2.8rem,5vw,5.5rem);max-width:none;white-space:nowrap}
+@media(max-width:700px){.brand-section h2{white-space:normal}.project-visual .project-caption{padding:35px 14px 14px}}
