@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { PortfolioFooter } from '../../components/portfolio-footer';
 
 const milestones = [
   ['2026','Bringing HKTVmall into the WeChat Ecosystem','HKTVmall WeChat Mini Program','Led the China-market WeChat Mini Program design from concept to launch in four months, successfully bringing new users into the HKTVmall ecosystem.','hktv-wechat-mini-program'],
@@ -23,10 +24,13 @@ const milestones = [
 
 export default function Milestone() {
   const [open, setOpen] = useState<number | null>(null);
+  const [visible, setVisible] = useState<number[]>([]);
   const timelineRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.milestone-item')];
-    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); }), { threshold: .18 });
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) setVisible((current) => current.includes(Number(entry.target.dataset.index)) ? current : [...current, Number(entry.target.dataset.index)]);
+    }), { threshold: .18 });
     items.forEach((item) => observer.observe(item));
     const draw = () => { const node = timelineRef.current; if (!node) return; const rect = node.getBoundingClientRect(); node.style.setProperty('--timeline-progress', String(Math.min(1, Math.max(0, (window.innerHeight * .68 - rect.top) / rect.height)))); };
     draw(); window.addEventListener('scroll', draw, { passive: true });
@@ -34,14 +38,15 @@ export default function Milestone() {
   }, []);
   return <main className="milestone-page">
     <header className="site-header"><Link className="wordmark" href="/">Kimberly Toh</Link><nav aria-label="Primary navigation"><Link href="/milestone">My Milestones</Link><Link href="/projects">My Work</Link><Link href="/about">Me</Link></nav></header>
-    <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1>Milestones, <i>made visible.</i></h1><p>A journey from visual storytelling to scalable product systems.</p></section>
+    <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1>Journey from <i>visual storytelling</i> to <i>scalable product systems.</i></h1></section>
     <section className="timeline" ref={timelineRef} aria-label="Kimberly Toh career milestones"><div className="timeline-line" aria-hidden="true" />
-      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open === index; return <article className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${expanded ? 'is-open' : ''}`} key={`${year}-${title}`}>
-        <button className="milestone-toggle" type="button" onClick={() => setOpen(expanded ? null : index)} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span><span className="explore-hint">Explore <b>↗</b></span></button>
+      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open === index; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : null; return <article data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''}`} key={`${year}-${title}`}>
+        <button className="milestone-toggle" type="button" onClick={() => setOpen(expanded ? null : index)} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>
         <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} onClick={() => setOpen(expanded ? null : index)} />
-        <div className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{slug && <Link href={`/projects#${slug}`} data-project-slug={slug}>View project ↗</Link>}</div>
+        <div className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => <Link key={projectSlug} href={`/projects#${projectSlug}`} data-project-slug={projectSlug}>View {label} ↗</Link>)}</div> : slug && <Link href={`/projects#${slug}`} data-project-slug={slug}>View project ↗</Link>}</div>
       </article>; })}
     </section>
-    <section className="milestone-closing"><p>Still shaping what matters.</p><Link href="/projects">Explore my work ↗</Link></section>
+    <section className="milestone-closing"><Link href="/projects">Explore my work ↗</Link></section>
+    <PortfolioFooter />
   </main>;
 }

@@ -42,3 +42,10 @@ footer>p{font-size:clamp(4rem,8.5vw,9rem);line-height:.8;margin-bottom:clamp(55p
 .site-header{border-bottom:0}
 .all-works{display:flex;justify-content:center;margin-left:auto;margin-right:auto;width:50%}
 @media(max-width:700px){.all-works{width:100%}}
+
+/* Balanced masonry work grid */
+.project-grid{align-items:stretch;display:grid;gap:clamp(24px,4vw,60px);grid-template-columns:minmax(0,.78fr) minmax(0,1.58fr)}
+.project-column{display:flex;flex-direction:column;gap:clamp(24px,4vw,60px)}
+.project-grid .project{margin:0}.project-grid .project-1 .project-visual{height:clamp(220px,22vw,330px)}.project-grid .project-3 .project-visual{height:clamp(400px,42vw,630px)}.project-grid .project-2 .project-visual{height:clamp(280px,30vw,455px)}.project-grid .project-4 .project-visual{height:clamp(340px,34vw,505px)}
+.project-visual{border-radius:18px;overflow:hidden}.project-tag{background:rgba(255,255,255,.91);border-radius:999px;bottom:16px;color:#7d8585;font:500 .64rem/1.28 'Plus Jakarta Sans',sans-serif;left:16px;max-width:calc(100% - 32px);padding:8px 11px;position:absolute;z-index:4}.project:hover .project-tag,.project:focus-visible .project-tag{opacity:0;transition:opacity .18s ease}.project-visual .project-caption{bottom:0;padding-bottom:22px}.project-visual .project-caption h3{font-size:1.22rem}
+@media(max-width:700px){.project-grid{display:block}.project-column{gap:28px;margin-bottom:28px}.project-grid .project-visual,.project-grid .project-1 .project-visual,.project-grid .project-2 .project-visual,.project-grid .project-3 .project-visual,.project-grid .project-4 .project-visual{height:62vw;min-height:0}.project-tag{bottom:12px;left:12px;max-width:calc(100% - 24px)}}
