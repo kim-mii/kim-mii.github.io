@@ -53,6 +53,8 @@ export default defineConfig(async () => {
       vinext(),
       sites(),
       cloudflare({
+        // The Codex sandbox does not allow the optional Inspector socket.
+        inspectorPort: false,
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
         config: localBindingConfig,
       }),

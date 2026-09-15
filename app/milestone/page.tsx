@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { PortfolioFooter } from '../../components/portfolio-footer';
+import { ProjectLink } from '../../components/project-link';
+import { SiteHeader } from '../../components/site-header';
 
 const milestones = [
   ['2026','Bringing HKTVmall into the WeChat Ecosystem','HKTVmall WeChat Mini Program','Led the China-market WeChat Mini Program design from concept to launch in four months, successfully bringing new users into the HKTVmall ecosystem.','hktv-wechat-mini-program'],
@@ -22,9 +24,19 @@ const milestones = [
   ['2012','A Foundation in Digital Craft','Swinburne University of Technology, Melbourne','Entered the Multimedia Design program, building a foundation across interaction, visual communication, branding, and digital storytelling.',null],
 ] as const;
 
+const milestoneRoutes: Record<string, string> = {
+  'hktv-3pl-mms': '/projects/hktv-3pl-mms',
+  'hotel-loyalty-reward-app': '/projects/insiders-club',
+  'discover-miri-app': '/projects/discover-miri',
+  'kuching-marathon': '/projects/kuching-marathon-2016',
+  'asus-veriview': '/projects/asus-veriview',
+  'rog-armoury-crate-3': '/projects/rog-armoury-crate-3',
+};
+
 export default function Milestone() {
   const [open, setOpen] = useState<number | null>(null);
   const [visible, setVisible] = useState<number[]>([]);
+  const [returnedId, setReturnedId] = useState<string | null>(null);
   const timelineRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.milestone-item')];
@@ -36,14 +48,30 @@ export default function Milestone() {
     draw(); window.addEventListener('scroll', draw, { passive: true });
     return () => { observer.disconnect(); window.removeEventListener('scroll', draw); };
   }, []);
+  useEffect(() => {
+    let timer: number | undefined;
+    const returnToMilestone = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (!/^year-\d{4}(?:-[a-z0-9-]+)?$/.test(id)) return;
+      const item = document.getElementById(id);
+      if (!item) return;
+      requestAnimationFrame(() => item.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+      setReturnedId(id);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setReturnedId(null), 1800);
+    };
+    returnToMilestone();
+    window.addEventListener('hashchange', returnToMilestone);
+    return () => { window.removeEventListener('hashchange', returnToMilestone); window.clearTimeout(timer); };
+  }, []);
   return <main className="milestone-page">
-    <header className="site-header"><Link className="wordmark" href="/">Kimberly Toh</Link><nav aria-label="Primary navigation"><Link href="/milestone">My Milestones</Link><Link href="/projects">My Work</Link><Link href="/about">Me</Link></nav></header>
+    <SiteHeader />
     <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1>Journey from <i>visual storytelling</i> to <i>scalable product systems.</i></h1></section>
     <section className="timeline" ref={timelineRef} aria-label="Kimberly Toh career milestones"><div className="timeline-line" aria-hidden="true" />
-      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open === index; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : null; return <article data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''}`} key={`${year}-${title}`}>
-        <button className="milestone-toggle" type="button" onClick={() => setOpen(expanded ? null : index)} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>
+      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open === index; const detailRoute = slug ? milestoneRoutes[slug] : undefined; const repeatedYear = milestones.filter(([candidate]) => candidate === year).length > 1; const milestoneId = repeatedYear ? `year-${year}-${slug || index}` : `year-${year}`; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : null; return <article id={milestoneId} data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''} ${returnedId === milestoneId ? 'is-returned' : ''}`} key={`${year}-${title}`}>
+        {detailRoute ? <ProjectLink className="milestone-toggle milestone-toggle--link" href={detailRoute} source="milestones" year={year} milestoneId={milestoneId}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></ProjectLink> : <button className="milestone-toggle" type="button" onClick={() => setOpen(expanded ? null : index)} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>}
         <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} onClick={() => setOpen(expanded ? null : index)} />
-        <div className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => <Link key={projectSlug} href={`/projects#${projectSlug}`} data-project-slug={projectSlug}>View {label} ↗</Link>)}</div> : slug && <Link href={`/projects#${slug}`} data-project-slug={slug}>View project ↗</Link>}</div>
+        <div className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => <ProjectLink key={projectSlug} href={milestoneRoutes[projectSlug]} source="milestones" year={year} milestoneId={milestoneId} data-project-slug={projectSlug}>View {label} ↗</ProjectLink>)}</div> : null}</div>
       </article>; })}
     </section>
     <section className="milestone-closing"><Link href="/projects">Explore my work ↗</Link></section>

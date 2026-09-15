@@ -1,0 +1,24 @@
+.brand-section{overflow:visible}
+.logo-carousel{margin:-56px calc(var(--page-gutter) * -1);overflow:hidden;padding:56px var(--page-gutter);touch-action:pan-x}
+.logo-carousel-track{animation:logo-marquee 36s linear infinite;display:flex;width:max-content}
+.logo-carousel-group{display:flex;gap:20px;padding-right:20px}
+.logo-box{align-items:center;background:rgba(255,255,255,.35);border:1px solid var(--line);color:var(--ink);display:grid;flex:0 0 240px;height:180px;justify-items:center;overflow:visible;padding:0;place-items:center;position:relative;width:240px}
+.logo-box img{display:block;height:auto;max-height:62%;max-width:78%;object-fit:contain;width:auto}
+.logo-box--dark{background:#17191a}
+.logo-box--light{background:#fff}
+.logo-box--tall img{max-height:72%}
+.logo-fallback{display:none;font:500 1rem/1.2 'Plus Jakarta Sans',sans-serif;padding:20px;text-align:center}
+.logo-box.has-image-error img{display:none}
+.logo-box.has-image-error .logo-fallback{display:block}
+.logo-tooltip{background:var(--mist);bottom:calc(100% + 11px);color:#687272;display:grid;font:.66rem/1.35 'Plus Jakarta Sans',sans-serif;gap:2px;left:50%;max-width:min(220px,calc(100vw - 32px));opacity:0;padding:8px 10px;pointer-events:none;position:absolute;text-align:center;transform:translate(-50%,5px);transition:.2s;visibility:hidden;white-space:nowrap;z-index:3}
+.logo-tooltip>span:first-child{font-weight:600}
+.logo-tooltip--below{bottom:auto;top:calc(100% + 11px)}
+.logo-box:hover .logo-tooltip,.logo-box:focus-visible .logo-tooltip,.logo-tooltip.is-active{opacity:1;transform:translate(-50%,0);visibility:visible}
+.logo-box:hover,.logo-box:focus-visible{background:var(--blush);border-color:var(--blush);outline:none}
+.logo-box--dark:hover,.logo-box--dark:focus-visible{background:#17191a;border-color:var(--mist)}
+.logo-box--light:hover,.logo-box--light:focus-visible{background:#fff;border-color:var(--mist)}
+.logo-carousel:hover .logo-carousel-track,.logo-carousel:focus-within .logo-carousel-track,.logo-carousel.is-interacted .logo-carousel-track{animation-play-state:paused}
+@keyframes logo-marquee{to{transform:translateX(-50%)}}
+@media(max-width:1100px){.logo-carousel-group{gap:16px;padding-right:16px}.logo-box{flex-basis:200px;height:150px;width:200px}}
+@media(max-width:700px){.logo-carousel{overflow-x:auto;scroll-snap-type:x proximity}.logo-carousel-track{animation-duration:36s}.logo-carousel-group{gap:12px;padding-right:12px}.logo-box{aspect-ratio:4 / 3;flex-basis:min(76vw,240px);height:auto;scroll-snap-align:start;width:min(76vw,240px)}.logo-tooltip{display:none}.logo-box:focus-visible .logo-tooltip,.logo-tooltip.is-active{display:grid;left:50%;white-space:normal;width:min(220px,calc(100vw - 32px))}}
+@media(prefers-reduced-motion:reduce){.logo-carousel{overflow-x:auto}.logo-carousel-track{animation:none}}
