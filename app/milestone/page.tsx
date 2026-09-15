@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { PortfolioFooter } from '../../components/portfolio-footer';
+import { BackToTop } from '../../components/project-navigation';
 import { ProjectLink } from '../../components/project-link';
 import { SiteHeader } from '../../components/site-header';
 
@@ -34,19 +35,45 @@ const milestoneRoutes: Record<string, string> = {
 };
 
 export default function Milestone() {
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<number[]>([]);
   const [visible, setVisible] = useState<number[]>([]);
   const [returnedId, setReturnedId] = useState<string | null>(null);
   const timelineRef = useRef<HTMLElement>(null);
+  const lastScrollY = useRef(0);
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.milestone-item')];
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) setVisible((current) => current.includes(Number(entry.target.dataset.index)) ? current : [...current, Number(entry.target.dataset.index)]);
     }), { threshold: .18 });
     items.forEach((item) => observer.observe(item));
-    const draw = () => { const node = timelineRef.current; if (!node) return; const rect = node.getBoundingClientRect(); node.style.setProperty('--timeline-progress', String(Math.min(1, Math.max(0, (window.innerHeight * .68 - rect.top) / rect.height)))); };
-    draw(); window.addEventListener('scroll', draw, { passive: true });
-    return () => { observer.disconnect(); window.removeEventListener('scroll', draw); };
+    const updateTimeline = () => {
+      const node = timelineRef.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      node.style.setProperty('--timeline-progress', String(Math.min(1, Math.max(0, (window.innerHeight * .68 - rect.top) / rect.height))));
+
+      const scrollY = window.scrollY;
+      const isMovingDown = scrollY > lastScrollY.current;
+      const isMovingUp = scrollY < lastScrollY.current;
+      const activeLine = Math.max(118, window.innerHeight * .56);
+      if (isMovingDown) {
+        const entering = items.flatMap((item) => {
+          const itemRect = item.getBoundingClientRect();
+          const index = Number(item.dataset.index);
+          return itemRect.top <= activeLine && itemRect.bottom > 104 ? [index] : [];
+        });
+        if (entering.length) setOpen((current) => [...new Set([...current, ...entering])]);
+      }
+      if (isMovingUp) {
+        setOpen((current) => current.filter((index) => {
+          const item = items.find((candidate) => Number(candidate.dataset.index) === index);
+          return Boolean(item && item.getBoundingClientRect().top <= activeLine);
+        }));
+      }
+      lastScrollY.current = scrollY;
+    };
+    updateTimeline(); window.addEventListener('scroll', updateTimeline, { passive: true }); window.addEventListener('resize', updateTimeline);
+    return () => { observer.disconnect(); window.removeEventListener('scroll', updateTimeline); window.removeEventListener('resize', updateTimeline); };
   }, []);
   useEffect(() => {
     let timer: number | undefined;
@@ -68,13 +95,17 @@ export default function Milestone() {
     <SiteHeader />
     <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1>Journey from <i>visual storytelling</i> to <i>scalable product systems.</i></h1></section>
     <section className="timeline" ref={timelineRef} aria-label="Kimberly Toh career milestones"><div className="timeline-line" aria-hidden="true" />
-      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open === index; const detailRoute = slug ? milestoneRoutes[slug] : undefined; const repeatedYear = milestones.filter(([candidate]) => candidate === year).length > 1; const milestoneId = repeatedYear ? `year-${year}-${slug || index}` : `year-${year}`; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : null; return <article id={milestoneId} data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''} ${returnedId === milestoneId ? 'is-returned' : ''}`} key={`${year}-${title}`}>
-        {detailRoute ? <ProjectLink className="milestone-toggle milestone-toggle--link" href={detailRoute} source="milestones" year={year} milestoneId={milestoneId}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></ProjectLink> : <button className="milestone-toggle" type="button" onClick={() => setOpen(expanded ? null : index)} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>}
-        <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} onClick={() => setOpen(expanded ? null : index)} />
-        <div className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => <ProjectLink key={projectSlug} href={milestoneRoutes[projectSlug]} source="milestones" year={year} milestoneId={milestoneId} data-project-slug={projectSlug}>View {label} ↗</ProjectLink>)}</div> : null}</div>
+      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open.includes(index); const detailRoute = slug ? milestoneRoutes[slug] : undefined; const repeatedYear = milestones.filter(([candidate]) => candidate === year).length > 1; const milestoneId = repeatedYear ? `year-${year}-${slug || index}` : `year-${year}`; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : detailRoute && slug ? [[project, slug]] : null; const toggle = () => setOpen((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index]); return <article id={milestoneId} data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''} ${returnedId === milestoneId ? 'is-returned' : ''}`} key={`${year}-${title}`}>
+        <button className="milestone-toggle" type="button" onClick={toggle} aria-controls={`milestone-detail-${index}`} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>
+        <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} tabIndex={-1} onClick={toggle} />
+        <div id={`milestone-detail-${index}`} className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => {
+          const projectRoute = milestoneRoutes[projectSlug];
+          return projectRoute ? <ProjectLink key={projectSlug} href={projectRoute} source="milestones" year={year} milestoneId={milestoneId} data-project-slug={projectSlug} tabIndex={expanded ? 0 : -1}>View {label} ↗</ProjectLink> : null;
+        })}</div> : null}</div>
       </article>; })}
     </section>
     <section className="milestone-closing"><Link href="/projects">Explore my work ↗</Link></section>
     <PortfolioFooter />
+    <BackToTop onBeforeScroll={() => setOpen([])} />
   </main>;
 }

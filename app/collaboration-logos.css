@@ -2,12 +2,13 @@
 .logo-carousel{margin:-56px calc(var(--page-gutter) * -1);overflow:hidden;padding:56px var(--page-gutter);touch-action:pan-x}
 .logo-carousel-track{animation:logo-marquee 36s linear infinite;display:flex;width:max-content}
 .logo-carousel-group{display:flex;gap:20px;padding-right:20px}
-.logo-box{align-items:center;background:rgba(255,255,255,.35);border:1px solid var(--line);color:var(--ink);display:grid;flex:0 0 240px;height:180px;justify-items:center;overflow:visible;padding:0;place-items:center;position:relative;width:240px}
+.logo-box{align-items:center;background:rgba(255,255,255,.35);border:1px solid var(--line);border-radius:21px;color:var(--ink);display:grid;flex:0 0 240px;height:180px;justify-items:center;overflow:visible;padding:0;place-items:center;position:relative;width:240px}
 .logo-box img{display:block;height:auto;max-height:62%;max-width:78%;object-fit:contain;width:auto}
 .logo-box--dark{background:#17191a}
 .logo-box--light{background:#fff}
 .logo-box--tall img{max-height:72%}
 .logo-fallback{display:none;font:500 1rem/1.2 'Plus Jakarta Sans',sans-serif;padding:20px;text-align:center}
+.logo-box--fallback .logo-fallback{display:block;font-size:1.05rem;letter-spacing:-.025em;max-width:78%}
 .logo-box.has-image-error img{display:none}
 .logo-box.has-image-error .logo-fallback{display:block}
 .logo-tooltip{background:var(--mist);bottom:calc(100% + 11px);color:#687272;display:grid;font:.66rem/1.35 'Plus Jakarta Sans',sans-serif;gap:2px;left:50%;max-width:min(220px,calc(100vw - 32px));opacity:0;padding:8px 10px;pointer-events:none;position:absolute;text-align:center;transform:translate(-50%,5px);transition:.2s;visibility:hidden;white-space:nowrap;z-index:3}

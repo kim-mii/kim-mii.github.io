@@ -31,7 +31,9 @@ export function SiteHeader() {
 
   const close = () => { setOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); };
   return <header className="site-header">
-    <Link className="wordmark" href="/" aria-label="Return to Kimberly Toh homepage">Kimberly Toh</Link>
+    <Link className="wordmark" href="/" aria-label="Return to Kimberly Toh homepage">
+      <img className="wordmark-logo" src="/assets/Logomark.png" alt="Kimberly Toh" />
+    </Link>
     <nav className="desktop-navigation" aria-label="Primary navigation">{links.map((link) => <Link className={pathname === link.href ? 'active-nav' : ''} href={link.href} key={link.href}>{link.label === 'My Contributions' ? 'My Work' : link.label}</Link>)}</nav>
     <button className={`menu-button ${open ? 'is-open' : ''}`} type="button" ref={menuButton} aria-label={open ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => open ? close() : setOpen(true)}><span /><span /><span /></button>
     {open ?

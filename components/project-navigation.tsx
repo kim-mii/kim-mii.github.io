@@ -59,13 +59,13 @@ export function ProjectNavigation() {
       sessionStorage.setItem('portfolio-scroll-restore', JSON.stringify({ path: destination, scrollY: matchingContext.scrollY }));
     }
   };
-  return <><nav className="case-nav" aria-label="Project navigation">
+  return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
     <Link href={destination} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</Link>
     <div className="case-arrows"><ArrowControl direction="previous" href={previous} /><ArrowControl direction="next" href={next} /></div>
   </nav><BackToTop /></>;
 }
 
-export function BackToTop() {
+export function BackToTop({ onBeforeScroll }: { onBeforeScroll?: () => void }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -75,6 +75,9 @@ export function BackToTop() {
     return () => window.removeEventListener('scroll', updateVisibility);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  const scrollToTop = () => {
+    onBeforeScroll?.();
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  };
   return <button className={`back-to-top ${visible ? 'is-visible' : ''}`} type="button" aria-label="Back to top" onClick={scrollToTop}><span aria-hidden="true">↑</span></button>;
 }

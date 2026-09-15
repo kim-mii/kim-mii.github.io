@@ -1,11 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import type { ComponentProps, MouseEvent, ReactNode } from 'react';
 
 type ProjectSource = 'home' | 'work' | 'milestones' | 'internal';
 
-type ProjectLinkProps = Omit<ComponentProps<typeof Link>, 'href' | 'onClick' | 'children'> & {
+type ProjectLinkProps = Omit<ComponentProps<'a'>, 'href' | 'onClick' | 'children'> & {
   href: string;
   source: ProjectSource;
   year?: string;
@@ -30,7 +29,16 @@ export function ProjectLink({ href, source, year, milestoneId, children, onClick
       milestoneId,
     }));
     onClick?.(event);
+    if (event.defaultPrevented) return;
+    // Use a normal document navigation after recording the source. This avoids
+    // losing a milestone destination when a development-time hydration refresh
+    // interrupts framework-managed link navigation.
+    event.preventDefault();
+    window.location.assign(destination);
   };
 
-  return <Link {...props} href={destination} onClick={rememberSource}>{children}</Link>;
+  // A native anchor keeps project destinations usable even before client hydration.
+  // The URL itself contains the milestone source, while session storage augments
+  // Home and My Work returns with their prior scroll position.
+  return <a {...props} href={destination} onClick={rememberSource}>{children}</a>;
 }

@@ -27,7 +27,7 @@ export function ResumeSelector() {
   }, []);
 
   return <div className="resume-menu" ref={selectorRef}>
-    <button className="resume-toggle" type="button" ref={buttonRef} onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="menu" aria-controls={menuId}>View resume</button>
+    <button className="resume-toggle" type="button" ref={buttonRef} onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="menu" aria-controls={menuId}>View Resume</button>
     {open && <div className="resume-options" id={menuId} role="menu" aria-label="Resume options">{resumes.map(({ label, href }) => <a href={href} key={label} target="_blank" rel="noopener noreferrer" role="menuitem" aria-label={`Open ${label} PDF in a new tab`} onClick={() => setOpen(false)}>{label}</a>)}</div>}
   </div>;
 }
