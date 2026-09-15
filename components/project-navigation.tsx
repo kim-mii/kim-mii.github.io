@@ -25,7 +25,7 @@ function ArrowControl({ direction, href }: { direction: 'previous' | 'next'; hre
   const arrow = direction === 'previous' ? '←' : '→';
   const rememberProject = () => sessionStorage.setItem('portfolio-project-return', JSON.stringify({ source: 'internal', destinationPath: href, returnPath: `${window.location.pathname}${window.location.search}${window.location.hash}`, scrollY: window.scrollY }));
   return href
-    ? <Link href={`${href}?from=internal`} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></Link>
+    ? <Link href={`${href}?from=internal`} prefetch={false} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></Link>
     : <span aria-disabled="true" aria-label={`${tooltip} unavailable`} className="case-arrow case-arrow--disabled" title={`${tooltip} unavailable`}><span aria-hidden="true">{arrow}</span></span>;
 }
 
@@ -60,7 +60,7 @@ export function ProjectNavigation() {
     }
   };
   return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
-    <Link href={destination} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</Link>
+    <Link href={destination} prefetch={false} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</Link>
     <div className="case-arrows"><ArrowControl direction="previous" href={previous} /><ArrowControl direction="next" href={next} /></div>
   </nav><BackToTop /></>;
 }

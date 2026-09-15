@@ -104,7 +104,7 @@ export default function Milestone() {
         })}</div> : null}</div>
       </article>; })}
     </section>
-    <section className="milestone-closing"><Link href="/projects">Explore my work ↗</Link></section>
+    <section className="milestone-closing"><Link href="/projects" prefetch={false}>Explore my work ↗</Link></section>
     <PortfolioFooter />
     <BackToTop onBeforeScroll={() => setOpen([])} />
   </main>;
