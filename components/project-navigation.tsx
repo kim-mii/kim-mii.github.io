@@ -72,6 +72,7 @@ export function ProjectNavigation() {
   const previous = index > 0 ? projectOrder[index - 1] : undefined;
   const next = index >= 0 && index < projectOrder.length - 1 ? projectOrder[index + 1] : undefined;
   const [returnContext, setReturnContext] = useState<ReturnContext | null>(null);
+  const [navigationReady, setNavigationReady] = useState(false);
 
   useEffect(() => {
     try {
@@ -80,6 +81,7 @@ export function ProjectNavigation() {
     } catch {
       setReturnContext(null);
     }
+    setNavigationReady(true);
   }, []);
 
   const matchingContext = returnContext?.destinationPath === canonicalPathname ? returnContext : null;
@@ -94,7 +96,10 @@ export function ProjectNavigation() {
   const safeMilestoneId = milestoneId && /^year-\d{4}(?:-[a-z0-9-]+)?$/.test(milestoneId) ? milestoneId : year && /^\d{4}$/.test(year) ? `year-${year}` : undefined;
   const internalReturn = matchingContext?.returnPath?.startsWith('/') ? matchingContext.returnPath : undefined;
   const destination = source === 'milestones' ? `/milestone${safeMilestoneId ? `#${safeMilestoneId}` : ''}` : source === 'home' ? '/' : source === 'work' ? '/projects' : source === 'internal' && internalReturn ? internalReturn : '/projects';
-  const label = source === 'milestones' ? '← Back to My Milestones' : source === 'home' ? '← Back to Home' : source === 'work' ? '← Back to My Work' : source === 'internal' && internalReturn ? '← Back to previous page' : '← Back to My Work';
+  const resolvedLabel = source === 'milestones' ? '← Back to My Milestones' : source === 'home' ? '← Back to Home' : source === 'work' ? '← Back to My Work' : source === 'internal' && internalReturn ? '← Back to previous page' : '← Back to My Work';
+  // A static export cannot read the query string during its first render. Keep
+  // that first frame neutral until the browser has resolved the real source.
+  const label = navigationReady ? resolvedLabel : '← Back';
   const rememberScroll = () => {
     if ((source === 'home' || source === 'work') && typeof matchingContext?.scrollY === 'number') {
       sessionStorage.setItem('portfolio-scroll-restore', JSON.stringify({ path: destination, scrollY: matchingContext.scrollY }));
