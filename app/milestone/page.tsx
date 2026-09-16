@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { PortfolioFooter } from '../../components/portfolio-footer';
 import { BackToTop } from '../../components/project-navigation';
@@ -104,7 +103,7 @@ export default function Milestone() {
         })}</div> : null}</div>
       </article>; })}
     </section>
-    <section className="milestone-closing"><Link href="/projects" prefetch={false}>Explore my work ↗</Link></section>
+    <section className="milestone-closing"><a href="/projects/">Explore my work ↗</a></section>
     <PortfolioFooter />
     <BackToTop onBeforeScroll={() => setOpen([])} />
   </main>;

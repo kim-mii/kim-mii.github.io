@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -19,13 +18,20 @@ const projectOrder = [
   '/projects/kuching-marathon-2016',
 ];
 
+function staticRoute(path: string) {
+  const [pathWithQuery, hash = ''] = path.split('#', 2);
+  const [pathname, query = ''] = pathWithQuery.split('?', 2);
+  const normalizedPath = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
+  return `${normalizedPath}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
+}
+
 function ArrowControl({ direction, href }: { direction: 'previous' | 'next'; href?: string }) {
   const label = direction === 'previous' ? 'View previous project' : 'View next project';
   const tooltip = direction === 'previous' ? 'Previous project' : 'Next project';
   const arrow = direction === 'previous' ? '←' : '→';
   const rememberProject = () => sessionStorage.setItem('portfolio-project-return', JSON.stringify({ source: 'internal', destinationPath: href, returnPath: `${window.location.pathname}${window.location.search}${window.location.hash}`, scrollY: window.scrollY }));
   return href
-    ? <Link href={`${href}?from=internal`} prefetch={false} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></Link>
+    ? <a href={staticRoute(`${href}?from=internal`)} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></a>
     : <span aria-disabled="true" aria-label={`${tooltip} unavailable`} className="case-arrow case-arrow--disabled" title={`${tooltip} unavailable`}><span aria-hidden="true">{arrow}</span></span>;
 }
 
@@ -60,7 +66,7 @@ export function ProjectNavigation() {
     }
   };
   return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
-    <Link href={destination} prefetch={false} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</Link>
+    <a href={staticRoute(destination)} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</a>
     <div className="case-arrows"><ArrowControl direction="previous" href={previous} /><ArrowControl direction="next" href={next} /></div>
   </nav><BackToTop /></>;
 }

@@ -17,7 +17,7 @@ export function ProjectLink({ href, source, year, milestoneId, children, onClick
   const query = new URLSearchParams({ from: source });
   if (year) query.set('year', year);
   if (milestoneId) query.set('milestone', milestoneId);
-  const destination = `${href}?${query.toString()}`;
+  const destination = `${href.replace(/\/+$/, '')}/?${query.toString()}`;
 
   const rememberSource = (event: MouseEvent<HTMLAnchorElement>) => {
     sessionStorage.setItem('portfolio-project-return', JSON.stringify({
