@@ -18,6 +18,15 @@ const projectOrder = [
   '/projects/kuching-marathon-2016',
 ];
 
+type ReturnContext = {
+  source?: string;
+  destinationPath?: string;
+  returnPath?: string;
+  scrollY?: number;
+  year?: string;
+  milestoneId?: string;
+};
+
 function staticRoute(path: string) {
   const [pathWithQuery, hash = ''] = path.split('#', 2);
   const [pathname, query = ''] = pathWithQuery.split('?', 2);
@@ -25,13 +34,31 @@ function staticRoute(path: string) {
   return `${normalizedPath}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
 }
 
-function ArrowControl({ direction, href }: { direction: 'previous' | 'next'; href?: string }) {
+function ArrowControl({ direction, href, source, year, milestoneId, returnContext }: {
+  direction: 'previous' | 'next';
+  href?: string;
+  source?: string;
+  year?: string;
+  milestoneId?: string;
+  returnContext: ReturnContext | null;
+}) {
   const label = direction === 'previous' ? 'View previous project' : 'View next project';
   const tooltip = direction === 'previous' ? 'Previous project' : 'Next project';
   const arrow = direction === 'previous' ? '←' : '→';
-  const rememberProject = () => sessionStorage.setItem('portfolio-project-return', JSON.stringify({ source: 'internal', destinationPath: href, returnPath: `${window.location.pathname}${window.location.search}${window.location.hash}`, scrollY: window.scrollY }));
+  const originalSource = source === 'home' || source === 'work' || source === 'milestones' ? source : 'work';
+  const query = new URLSearchParams({ from: originalSource });
+  if (year) query.set('year', year);
+  if (milestoneId) query.set('milestone', milestoneId);
+  const rememberProject = () => sessionStorage.setItem('portfolio-project-return', JSON.stringify({
+    source: originalSource,
+    destinationPath: href,
+    returnPath: returnContext?.returnPath || `${window.location.pathname}${window.location.search}${window.location.hash}`,
+    scrollY: returnContext?.scrollY ?? window.scrollY,
+    year: returnContext?.year || year,
+    milestoneId: returnContext?.milestoneId || milestoneId,
+  }));
   return href
-    ? <a href={staticRoute(`${href}?from=internal`)} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></a>
+    ? <a href={staticRoute(`${href}?${query.toString()}`)} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></a>
     : <span aria-disabled="true" aria-label={`${tooltip} unavailable`} className="case-arrow case-arrow--disabled" title={`${tooltip} unavailable`}><span aria-hidden="true">{arrow}</span></span>;
 }
 
@@ -44,7 +71,7 @@ export function ProjectNavigation() {
   const index = projectOrder.indexOf(canonicalPathname);
   const previous = index > 0 ? projectOrder[index - 1] : undefined;
   const next = index >= 0 && index < projectOrder.length - 1 ? projectOrder[index + 1] : undefined;
-  const [returnContext, setReturnContext] = useState<{ source?: string; destinationPath?: string; returnPath?: string; scrollY?: number; year?: string; milestoneId?: string } | null>(null);
+  const [returnContext, setReturnContext] = useState<ReturnContext | null>(null);
 
   useEffect(() => {
     try {
@@ -56,9 +83,14 @@ export function ProjectNavigation() {
   }, []);
 
   const matchingContext = returnContext?.destinationPath === canonicalPathname ? returnContext : null;
-  const source = searchParams.get('from') || matchingContext?.source;
-  const year = searchParams.get('year') || matchingContext?.year;
-  const milestoneId = searchParams.get('milestone') || matchingContext?.milestoneId;
+  const inheritedContext = (() => {
+    if (!matchingContext?.returnPath) return null;
+    try { return new URL(matchingContext.returnPath, 'https://portfolio.local').searchParams; } catch { return null; }
+  })();
+  const requestedSource = searchParams.get('from') || matchingContext?.source;
+  const source = requestedSource === 'internal' ? inheritedContext?.get('from') || 'work' : requestedSource || 'work';
+  const year = searchParams.get('year') || matchingContext?.year || inheritedContext?.get('year') || undefined;
+  const milestoneId = searchParams.get('milestone') || matchingContext?.milestoneId || inheritedContext?.get('milestone') || undefined;
   const safeMilestoneId = milestoneId && /^year-\d{4}(?:-[a-z0-9-]+)?$/.test(milestoneId) ? milestoneId : year && /^\d{4}$/.test(year) ? `year-${year}` : undefined;
   const internalReturn = matchingContext?.returnPath?.startsWith('/') ? matchingContext.returnPath : undefined;
   const destination = source === 'milestones' ? `/milestone${safeMilestoneId ? `#${safeMilestoneId}` : ''}` : source === 'home' ? '/' : source === 'work' ? '/projects' : source === 'internal' && internalReturn ? internalReturn : '/projects';
@@ -70,7 +102,7 @@ export function ProjectNavigation() {
   };
   return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
     <a href={staticRoute(destination)} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</a>
-    <div className="case-arrows"><ArrowControl direction="previous" href={previous} /><ArrowControl direction="next" href={next} /></div>
+    <div className="case-arrows"><ArrowControl direction="previous" href={previous} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /><ArrowControl direction="next" href={next} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /></div>
   </nav><BackToTop /></>;
 }
 
