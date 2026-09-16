@@ -38,7 +38,10 @@ function ArrowControl({ direction, href }: { direction: 'previous' | 'next'; hre
 export function ProjectNavigation() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const index = projectOrder.indexOf(pathname);
+  // GitHub Pages serves exported routes with a trailing slash. Normalize the
+  // browser path before matching it against the portfolio's canonical order.
+  const canonicalPathname = pathname === '/' ? '/' : pathname.replace(/\/+$/, '');
+  const index = projectOrder.indexOf(canonicalPathname);
   const previous = index > 0 ? projectOrder[index - 1] : undefined;
   const next = index >= 0 && index < projectOrder.length - 1 ? projectOrder[index + 1] : undefined;
   const [returnContext, setReturnContext] = useState<{ source?: string; destinationPath?: string; returnPath?: string; scrollY?: number; year?: string; milestoneId?: string } | null>(null);
@@ -52,7 +55,7 @@ export function ProjectNavigation() {
     }
   }, []);
 
-  const matchingContext = returnContext?.destinationPath === pathname ? returnContext : null;
+  const matchingContext = returnContext?.destinationPath === canonicalPathname ? returnContext : null;
   const source = searchParams.get('from') || matchingContext?.source;
   const year = searchParams.get('year') || matchingContext?.year;
   const milestoneId = searchParams.get('milestone') || matchingContext?.milestoneId;
