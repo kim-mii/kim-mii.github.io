@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     description: 'Kimberly Toh is a product designer who turns complex workflows, systems, and business needs into clear, intuitive digital experiences.',
     path: '/',
   }),
+  verification: { google: 'jXHxTxnmsnfCLp5AmrUmDIRfPu1Fwdq4_xleIPWZY9I' },
   icons: { icon: '/assets/shared/favicon.svg' },
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }
