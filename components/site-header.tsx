@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -31,14 +30,14 @@ export function SiteHeader() {
 
   const close = () => { setOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); };
   return <header className="site-header">
-    <Link className="wordmark" href="/" prefetch={false} aria-label="Return to Kimberly Toh homepage">
+    <a className="wordmark" href="/" aria-label="Return to Kimberly Toh homepage">
       <img className="wordmark-logo" src="/assets/Logomark.png" alt="Kimberly Toh" />
-    </Link>
-    <nav className="desktop-navigation" aria-label="Primary navigation">{links.map((link) => <Link className={pathname === link.href ? 'active-nav' : ''} href={link.href} prefetch={false} key={link.href}>{link.label === 'My Contributions' ? 'My Work' : link.label}</Link>)}</nav>
+    </a>
+    <nav className="desktop-navigation" aria-label="Primary navigation">{links.map((link) => <a className={pathname === link.href ? 'active-nav' : ''} href={`${link.href}/`} key={link.href}>{link.label === 'My Contributions' ? 'My Work' : link.label}</a>)}</nav>
     <button className={`menu-button ${open ? 'is-open' : ''}`} type="button" ref={menuButton} aria-label={open ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => open ? close() : setOpen(true)}><span /><span /><span /></button>
     {open ?
       <aside id="mobile-navigation" className="navigation-drawer" ref={drawer} aria-label="Mobile navigation">
-        <nav aria-label="Mobile navigation">{links.map((link) => <Link className={pathname === link.href ? 'active-nav' : ''} href={link.href} prefetch={false} key={link.href} onClick={close}>{link.label}</Link>)}</nav>
+        <nav aria-label="Mobile navigation">{links.map((link) => <a className={pathname === link.href ? 'active-nav' : ''} href={`${link.href}/`} key={link.href} onClick={close}>{link.label}</a>)}</nav>
       </aside>
     : null}
   </header>;
