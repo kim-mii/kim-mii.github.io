@@ -22,7 +22,7 @@ export default function KWSKeywordSearch() {
       <p className="case-lede">A scalable internal platform that translates complex product configuration, CMS workflows, information architecture, and operational decisions into a clear extensible experience.</p>
     </section>
     <figure className={`case-final case-reveal ${visible ? 'is-visible' : ''}`} data-kws-case-study>
-      <img src="/assets/projects/kws-keyword-search/KWS Portfolio Case Study — Long Export.jpg" loading="lazy" alt="KWS Keyword Search product platform case study" />
+      <img src="/assets/projects/kws-keyword-search/KWS Portfolio Case Study — Long Export.jpg" loading="lazy" alt="KWS Keyword Search product platform case study" width={1920} height={14685} />
     </figure>
   </main>;
 }

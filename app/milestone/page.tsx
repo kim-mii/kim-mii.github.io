@@ -42,7 +42,8 @@ export default function Milestone() {
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.milestone-item')];
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-      if (entry.isIntersecting) setVisible((current) => current.includes(Number(entry.target.dataset.index)) ? current : [...current, Number(entry.target.dataset.index)]);
+      const target = entry.target as HTMLElement;
+      if (entry.isIntersecting) setVisible((current) => current.includes(Number(target.dataset.index)) ? current : [...current, Number(target.dataset.index)]);
     }), { threshold: .18 });
     items.forEach((item) => observer.observe(item));
     const updateTimeline = () => {

@@ -22,7 +22,7 @@ export default function HKTV3PLMMS() {
       <p className="case-lede">A merchant management system that brings 3PL services, operational visibility, and subscription planning into one focused workspace.</p>
     </section>
     <figure className={`case-final case-reveal ${visible ? 'is-visible' : ''}`} data-3pl-case-study>
-      <img src="/assets/projects/hktv-3pl-mms/HKTV 3PL MMS — Case Study.jpg" loading="lazy" alt="HKTV 3PL Merchant Management System case study" />
+      <img src="/assets/projects/hktv-3pl-mms/HKTV 3PL MMS — Case Study.jpg" loading="lazy" alt="HKTV 3PL Merchant Management System case study" width={1920} height={17084} />
     </figure>
   </main>;
 }

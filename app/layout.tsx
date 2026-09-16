@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { createMetadata, siteUrl } from './seo';
 import './globals.css';
 import './refinements.css';
 import './milestone/milestones.css';
@@ -28,5 +29,13 @@ import './projects/hktv-3pl-card.css';
 import './projects/mms-design-system.css';
 import './projects/project-navigation.css';
 import './resume-selector.css';
-export const metadata: Metadata = { title: 'Kimberly Toh — Product Designer', description: 'Portfolio of Kimberly Toh, Staff Product Designer and UIUX Designer.', icons: { icon: '/assets/shared/favicon.svg' } };
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  ...createMetadata({
+    title: 'Kimberly Toh — Product Designer | Portfolio',
+    description: 'Kimberly Toh is a product designer who turns complex workflows, systems, and business needs into clear, intuitive digital experiences.',
+    path: '/',
+  }),
+  icons: { icon: '/assets/shared/favicon.svg' },
+};
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }

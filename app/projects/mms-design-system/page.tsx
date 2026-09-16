@@ -22,7 +22,7 @@ export default function MMSDesignSystem() {
       <p className="case-lede">A shared system of components and guidelines that brings consistency, clarity, and speed to the MMS product experience.</p>
     </section>
     <figure className={`case-final case-reveal mms-case-study ${visible ? 'is-visible' : ''}`} data-mms-case-study>
-      <img src="/assets/projects/mms-design-system/MMS Design System Guide.jpg" loading="lazy" alt="MMS Design System Guide with component library and design guidelines" />
+      <img src="/assets/projects/mms-design-system/MMS Design System Guide.jpg" loading="lazy" alt="MMS Design System Guide with component library and design guidelines" width={1440} height={14245} />
     </figure>
   </main>;
 }
