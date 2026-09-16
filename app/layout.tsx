@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { createMetadata, siteUrl } from './seo';
 import './globals.css';
 import './refinements.css';
@@ -39,4 +40,22 @@ export const metadata: Metadata = {
   verification: { google: 'jXHxTxnmsnfCLp5AmrUmDIRfPu1Fwdq4_xleIPWZY9I' },
   icons: { icon: '/assets/shared/favicon.svg' },
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Kimberly Toh',
+  url: siteUrl,
+  jobTitle: 'Product Designer',
+  description: 'Product designer who turns complex workflows, systems, and business needs into clear, intuitive digital experiences.',
+  sameAs: ['https://www.linkedin.com/in/kimmy-yh/'],
+  knowsAbout: ['Product Design', 'UX Design', 'UI Design', 'Design Systems', 'Information Architecture'],
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body>
+    <Script id="kimberly-toh-person-schema" type="application/ld+json" strategy="beforeInteractive">
+      {JSON.stringify(personSchema)}
+    </Script>
+    {children}
+  </body></html>;
+}
