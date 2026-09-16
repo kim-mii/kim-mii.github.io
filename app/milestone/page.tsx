@@ -99,7 +99,7 @@ export default function Milestone() {
         <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} tabIndex={-1} onClick={toggle} />
         <div id={`milestone-detail-${index}`} className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => {
           const projectRoute = milestoneRoutes[projectSlug];
-          const linkCopy = projectSlug === 'hktv-3pl-mms' ? 'View HKTV 3PL MMS' : `View ${label} ↗`;
+          const linkCopy = `View ${label} ↗`;
           return projectRoute ? <ProjectLink key={projectSlug} href={projectRoute} source="milestones" year={year} milestoneId={milestoneId} data-project-slug={projectSlug} tabIndex={expanded ? 0 : -1}>{linkCopy}</ProjectLink> : null;
         })}</div> : null}</div>
       </article>; })}

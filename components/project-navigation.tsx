@@ -106,7 +106,7 @@ export function ProjectNavigation() {
     }
   };
   return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
-    <a href={staticRoute(destination)} className="case-back" aria-label={label} onClick={rememberScroll}>{label}</a>
+    <a href={staticRoute(destination)} className={`case-back ${navigationReady ? '' : 'case-back--pending'}`} aria-label={label} tabIndex={navigationReady ? undefined : -1} onClick={rememberScroll}>{label}</a>
     <div className="case-arrows"><ArrowControl direction="previous" href={previous} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /><ArrowControl direction="next" href={next} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /></div>
   </nav><BackToTop /></>;
 }
