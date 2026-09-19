@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { ProjectNavigation } from '../../../components/project-navigation';
+import { useTranslation } from '../../../components/translation';
 
 export default function KWSKeywordSearch() {
+  const t = useTranslation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function KWSKeywordSearch() {
     <section className="case-intro">
       <h1>KWS — Keyword Search</h1>
       <div className="case-tags"><span>CMS</span><span>Product Design</span><span>Product Strategy</span><span>Information Architecture</span></div>
-      <p className="case-lede">A scalable internal platform that translates complex product configuration, CMS workflows, information architecture, and operational decisions into a clear extensible experience.</p>
+      <p className="case-lede">{t('lede.KWS — Keyword Search', 'A scalable internal platform that translates complex product configuration, CMS workflows, information architecture, and operational decisions into a clear extensible experience.')}</p>
     </section>
     <figure className={`case-final case-reveal ${visible ? 'is-visible' : ''}`} data-kws-case-study>
       <img src="/assets/projects/kws-keyword-search/KWS Portfolio Case Study — Long Export.jpg" loading="lazy" alt="KWS Keyword Search product platform case study" width={1920} height={14685} />

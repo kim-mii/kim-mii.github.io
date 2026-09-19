@@ -5,6 +5,8 @@ import { PortfolioFooter } from '../../components/portfolio-footer';
 import { BackToTop } from '../../components/project-navigation';
 import { ProjectLink } from '../../components/project-link';
 import { SiteHeader } from '../../components/site-header';
+import { useTranslation } from '../../components/translation';
+import { useLanguage } from '../../components/language-provider';
 
 const milestones = [
   ['2026','Bringing HKTVmall into the WeChat Ecosystem','HKTVmall WeChat Mini Program','Led the China-market WeChat Mini Program design from concept to launch in four months, successfully bringing new users into the HKTVmall ecosystem.','hktv-wechat-mini-program'],
@@ -24,6 +26,29 @@ const milestones = [
   ['2012','A Foundation in Digital Craft','Swinburne University of Technology, Melbourne','Entered the Multimedia Design program, building a foundation across interaction, visual communication, branding, and digital storytelling.',null],
 ] as const;
 
+type MilestoneTitle = (typeof milestones)[number][1];
+
+// Keep the display title and every expanded-detail key tied to one explicit,
+// typed source. Adding a future timeline item now requires declaring its
+// translation namespace instead of silently deriving a mismatched slug key.
+const milestoneContentKeys = {
+  'Bringing HKTVmall into the WeChat Ecosystem': 'milestone.hktv-wechat-mini-program',
+  'Stepping Up to Staff': 'milestone.2024',
+  'Turning Operational Complexity into GMV Growth': 'milestone.hktv-3pl-mms',
+  'Designing Award-Recognised Technology': 'milestone.asus-veriview-armoury-crate',
+  'Designing Loyalty Across Hospitality': 'milestone.hotel-loyalty-reward-app',
+  'Creating Hospitality Beyond the Screen': 'milestone.hemisphere-hotel-group',
+  'Designing Commerce at Scale': 'milestone.revpay-taobao-revenue-harvest',
+  'Designing Discovery, Independently': 'milestone.discover-miri-app',
+  'Making a City Discoverable': 'milestone.visit-miri-year',
+  'Building Brands Made to Travel': 'milestone.kit-hin',
+  '22 Industries. 30 Days.': 'milestone.corporate-web-design-sprint',
+  'Putting Kuching on the Starting Line': 'milestone.kuching-marathon',
+  'The Start of a Design Career': 'milestone.2015-career',
+  'Designing Play Through Culture': 'milestone.layer-up',
+  'A Foundation in Digital Craft': 'milestone.2012',
+} satisfies Record<MilestoneTitle, string>;
+
 const milestoneRoutes: Record<string, string> = {
   'hktv-3pl-mms': '/projects/hktv-3pl-mms',
   'hotel-loyalty-reward-app': '/projects/insiders-club',
@@ -34,6 +59,8 @@ const milestoneRoutes: Record<string, string> = {
 };
 
 export default function Milestone() {
+  const t = useTranslation();
+  const { language } = useLanguage();
   const [open, setOpen] = useState<number[]>([]);
   const [visible, setVisible] = useState<number[]>([]);
   const [returnedId, setReturnedId] = useState<string | null>(null);
@@ -93,20 +120,42 @@ export default function Milestone() {
   }, []);
   return <main className="milestone-page">
     <SiteHeader />
-    <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1>Journey from <i>visual storytelling</i> to <i>scalable product systems.</i></h1></section>
-    <section className="timeline" ref={timelineRef} aria-label="Kimberly Toh career milestones"><div className="timeline-line" aria-hidden="true" />
-      {milestones.map(([year, title, project, detail, slug], index) => { const expanded = open.includes(index); const detailRoute = slug ? milestoneRoutes[slug] : undefined; const repeatedYear = milestones.filter(([candidate]) => candidate === year).length > 1; const milestoneId = repeatedYear ? `year-${year}-${slug || index}` : `year-${year}`; const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : detailRoute && slug ? [[project, slug]] : null; const toggle = () => setOpen((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index]); return <article id={milestoneId} data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''} ${returnedId === milestoneId ? 'is-returned' : ''}`} key={`${year}-${title}`}>
-        <button className="milestone-toggle" type="button" onClick={toggle} aria-controls={`milestone-detail-${index}`} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{title}</span></button>
-        <button className="timeline-marker" type="button" aria-label={`Expand ${title}`} tabIndex={-1} onClick={toggle} />
-        <div id={`milestone-detail-${index}`} className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{project}</p><p>{detail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => {
+    <section className="milestone-intro"><p className="eyebrow">2012 — 2026</p><h1 className={language === 'zh' ? 'zh-display' : undefined}>{language === 'zh' ? <>從把<span className="milestone-highlight">故事</span>說好，<br className="milestone-zh-desktop-break" />到把<span className="milestone-highlight">系統</span>做好。</> : <>Journey from <i>visual storytelling</i> to <i>scalable product systems.</i></>}</h1></section>
+    <section className="timeline" ref={timelineRef} aria-label={t('milestone.timelineAria', 'Kimberly Toh career milestones')}><div className="timeline-line" aria-hidden="true" />
+      {milestones.map(([year, title, project, detail, slug], index) => {
+        const expanded = open.includes(index);
+        const detailRoute = slug ? milestoneRoutes[slug] : undefined;
+        const repeatedYear = milestones.filter(([candidate]) => candidate === year).length > 1;
+        const milestoneId = repeatedYear ? `year-${year}-${slug || index}` : `year-${year}`;
+        const projectLinks = index === 3 ? [['ASUS VeriView', 'asus-veriview'], ['ROG Armoury Crate 3.0', 'rog-armoury-crate-3']] : detailRoute && slug ? [[project, slug]] : null;
+        const toggle = () => setOpen((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index]);
+        const titleKey = ({
+          'Bringing HKTVmall into the WeChat Ecosystem': 'milestone.2026',
+          'Stepping Up to Staff': 'milestone.2024',
+          'Turning Operational Complexity into GMV Growth': 'milestone.2023',
+          'Designing Award-Recognised Technology': 'milestone.2021',
+          'Designing Loyalty Across Hospitality': 'milestone.2019',
+          'Designing Discovery, Independently': 'milestone.2018-discover',
+          '22 Industries. 30 Days.': 'milestone.2016',
+          'Putting Kuching on the Starting Line': 'milestone.2015',
+        } as Record<string, string>)[title];
+        const contentKey = milestoneContentKeys[title];
+        const visibleTitle = t(`${contentKey}.title`, titleKey ? t(titleKey, title) : title);
+        const visibleProject = t(`${contentKey}.project`, project);
+        const visibleDetail = t(`${contentKey}.detail`, detail);
+        const expandLabel = t(`${contentKey}.expand`, t('milestone.expand', `Expand ${title}`));
+        return <article id={milestoneId} data-index={index} className={`milestone-item ${index % 2 ? 'milestone-item--right' : 'milestone-item--left'} ${visible.includes(index) ? 'is-visible' : ''} ${expanded ? 'is-open' : ''} ${returnedId === milestoneId ? 'is-returned' : ''}`} key={`${year}-${title}`}>
+        <button className="milestone-toggle" type="button" onClick={toggle} aria-controls={`milestone-detail-${index}`} aria-expanded={expanded}><span className="milestone-year">{year}</span><span className="milestone-title">{visibleTitle}</span></button>
+        <button className="timeline-marker" type="button" aria-label={expandLabel} tabIndex={-1} onClick={toggle} />
+        <div id={`milestone-detail-${index}`} className="milestone-detail" aria-hidden={!expanded}><p className="milestone-project">{visibleProject}</p><p>{visibleDetail}</p>{projectLinks ? <div className="project-link-list">{projectLinks.map(([label, projectSlug]) => {
           const projectRoute = milestoneRoutes[projectSlug];
-          const linkCopy = `View ${label} ↗`;
+          const linkCopy = t(`${contentKey}.link`, `View ${label} ↗`);
           return projectRoute ? <ProjectLink key={projectSlug} href={projectRoute} source="milestones" year={year} milestoneId={milestoneId} data-project-slug={projectSlug} tabIndex={expanded ? 0 : -1}>{linkCopy}</ProjectLink> : null;
         })}</div> : null}</div>
       </article>; })}
     </section>
-    <section className="milestone-closing"><a href="/projects/">Explore my work ↗</a></section>
-    <PortfolioFooter />
+    <section className="milestone-closing"><a className="text-button" href="/projects/">{t('milestone.allWork', 'Explore my work')} ↗</a></section>
+    <PortfolioFooter statement="Design what matters" />
     <BackToTop onBeforeScroll={() => setOpen([])} />
   </main>;
 }

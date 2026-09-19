@@ -14,6 +14,7 @@ export default function RogArmouryCrate() {
       { heading: 'Design System Support', copy: 'Contributed to reusable UI patterns including buttons, dropdowns, tabs, sliders, toggles, checkboxes, and shared interface states.' },
     ]}
     final={{ src: '/assets/projects/rog-armoury-crate-3/rog-armoury-crate-final.jpg', alt: 'ROG Armoury Crate 3.0 interface exploration, UI kit, component system, and final software screens' }}
+    seo={{ title: 'ROG Armoury Crate 3.0 — Gaming Software UI Design | Kimberly Toh', description: 'UI and design system contribution for ASUS ROG Armoury Crate 3.0, bringing clearer structure to high-performance gaming software controls.' }}
     previous="/projects/discover-miri"
     next="/projects/asus-veriview"
   />;

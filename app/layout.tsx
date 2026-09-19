@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { createMetadata, siteUrl } from './seo';
+import { LanguageProvider } from '../components/language-provider';
 import './globals.css';
 import './refinements.css';
 import './milestone/milestones.css';
 import './about/about.css';
+import './about/about-english-fix.css';
 import './milestone/fixes.css';
 import './resume/resume.css';
 import './projects/projects.css';
@@ -30,6 +32,7 @@ import './projects/hktv-3pl-card.css';
 import './projects/mms-design-system.css';
 import './projects/project-navigation.css';
 import './resume-selector.css';
+import './language.css';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   ...createMetadata({
@@ -52,10 +55,11 @@ const personSchema = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>
+  return <html lang="en" suppressHydrationWarning><body>
+    <Script id="language-preference-bootstrap" strategy="beforeInteractive">{`(function(){try{var language=localStorage.getItem('kimberlicious-language');document.documentElement.dataset.languagePreference=(language==='zh'||language==='en')?language:'';}catch(e){}document.documentElement.classList.add('language-preparing');})();`}</Script>
     <Script id="kimberly-toh-person-schema" type="application/ld+json" strategy="beforeInteractive">
       {JSON.stringify(personSchema)}
     </Script>
-    {children}
+    <LanguageProvider>{children}</LanguageProvider>
   </body></html>;
 }

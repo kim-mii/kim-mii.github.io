@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ProjectNavigation } from '../../components/project-navigation';
+import { useTranslation } from '../../components/translation';
 
 type Detail = { label: string; value: string };
 type Section = { heading: string; copy: string };
@@ -27,9 +28,11 @@ export type ProjectCaseProps = {
   previous?: string;
   next?: string;
   experienceAreas?: string[];
+  seo?: { title: string; description: string };
 };
 
-export function ProjectCase({ title, tags, lede, sections, final, previous, next }: ProjectCaseProps) {
+export function ProjectCase({ title, tags, lede, sections, final, previous, next, seo }: ProjectCaseProps) {
+  const t = useTranslation();
   const [visible, setVisible] = useState<string[]>([]);
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.case-reveal')];
@@ -40,6 +43,15 @@ export function ProjectCase({ title, tags, lede, sections, final, previous, next
     items.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    if (!seo) return;
+    const localizedTitle = t(`project.${title}.seo.title`, seo.title);
+    const localizedDescription = t(`project.${title}.seo.description`, seo.description);
+    document.title = localizedTitle;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', localizedDescription);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', localizedTitle);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', localizedDescription);
+  }, [seo, t, title]);
   const reveal = (id: string) => `case-reveal ${visible.includes(id) ? 'is-visible' : ''}`;
   const finalDimensions = finalImageDimensions[final.src];
   return <main className="case-page">
@@ -47,11 +59,11 @@ export function ProjectCase({ title, tags, lede, sections, final, previous, next
     <section className="case-intro">
       <h1>{title}</h1>
       <div className="case-tags">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-      <p className="case-lede">{lede}</p>
+      <p className="case-lede">{t(`lede.${title}`, lede)}</p>
     </section>
-    <section className="case-copy-flow" aria-label={`${title} case study`}>
-      {sections.map((section, index) => <article className={`${reveal(`copy-${index}`)} case-copy ${index % 3 === 1 ? 'case-copy--2' : index % 3 === 2 ? 'case-copy--3' : ''}`} data-reveal={`copy-${index}`} key={section.heading}><p className="case-number">{String(index + 1).padStart(2, '0')}</p><div><h2>{section.heading}</h2><p>{section.copy}</p></div></article>)}
+    <section className="case-copy-flow" aria-label={t(`project.${title}.aria.caseStudy`, `${title} case study`)}>
+      {sections.map((section, index) => <article className={`${reveal(`copy-${index}`)} case-copy ${index % 3 === 1 ? 'case-copy--2' : index % 3 === 2 ? 'case-copy--3' : ''}`} data-reveal={`copy-${index}`} key={section.heading}><p className="case-number">{String(index + 1).padStart(2, '0')}</p><div><h2>{t(`project.${title}.section.${index}.heading`, section.heading)}</h2><p>{t(`project.${title}.section.${index}.copy`, section.copy)}</p></div></article>)}
     </section>
-    <figure className={`${reveal('final')} case-final`} data-reveal="final"><img src={final.src} loading="lazy" alt={final.alt} width={finalDimensions?.width} height={finalDimensions?.height} /></figure>
+    <figure className={`${reveal('final')} case-final`} data-reveal="final"><img src={final.src} loading="lazy" alt={t(`project.${title}.image.final`, final.alt)} width={finalDimensions?.width} height={finalDimensions?.height} /></figure>
   </main>;
 }

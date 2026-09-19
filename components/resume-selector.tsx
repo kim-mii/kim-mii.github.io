@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import { useLanguage } from './language-provider';
+import { useTranslation } from './translation';
 
 const resumes = [
   { label: '中文履歷', href: '/assets/resumes/履歷_Kimberly.pdf' },
@@ -12,6 +14,8 @@ export function ResumeSelector() {
   const menuId = useId();
   const selectorRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { language } = useLanguage();
+  const t = useTranslation();
 
   useEffect(() => {
     const close = (event: MouseEvent) => { if (selectorRef.current && !selectorRef.current.contains(event.target as Node)) setOpen(false); };
@@ -27,7 +31,7 @@ export function ResumeSelector() {
   }, []);
 
   return <div className="resume-menu" ref={selectorRef}>
-    <button className="resume-toggle" type="button" ref={buttonRef} onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="menu" aria-controls={menuId}>View Resume</button>
-    {open && <div className="resume-options" id={menuId} role="menu" aria-label="Resume options">{resumes.map(({ label, href }) => <a href={href} key={label} target="_blank" rel="noopener noreferrer" role="menuitem" aria-label={`Open ${label} PDF in a new tab`} onClick={() => setOpen(false)}>{label}</a>)}</div>}
+    <button className="resume-toggle" type="button" ref={buttonRef} onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="menu" aria-controls={menuId}>{t('resume.view', 'View Resume')}</button>
+    {open && <div className="resume-options" id={menuId} role="menu" aria-label={t('resume.options', 'Resume options')}>{resumes.map(({ label, href }) => <a href={href} key={label} target="_blank" rel="noopener noreferrer" role="menuitem" aria-label={language === 'zh' ? `在新分頁開啟 ${label} PDF` : `Open ${label} PDF in a new tab`} onClick={() => setOpen(false)}>{label}</a>)}</div>}
   </div>;
 }

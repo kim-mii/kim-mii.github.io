@@ -7,6 +7,8 @@ import { BackToTop } from '../../components/project-navigation';
 import { ProjectLink } from '../../components/project-link';
 import { RestoreScroll } from '../../components/restore-scroll';
 import { SiteHeader } from '../../components/site-header';
+import { useTranslation } from '../../components/translation';
+import { useLanguage } from '../../components/language-provider';
 
 const names = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve'];
 const slugs = ['one','two','three','four','asus-veriview','rog-armoury-crate-3','discover-miri','insiders-club','revenue-investor','revenue-harvest','grand-margherita-hotel','kuching-marathon-2016'];
@@ -29,6 +31,8 @@ const projects = names.map((name, index) => {
 function TagRow({ tags }: { tags: string[] }) { return <div className="work-tags">{tags.map((tag, index) => <span className={index === 3 ? 'tag-fourth' : ''} key={tag}>{tag}</span>)}{tags.length > 3 && <span className="tag-ellipsis" role="button" tabIndex={0} aria-label="Information Architecture"><span aria-hidden="true">…</span><span className="tag-tooltip">Information Architecture</span></span>}</div>; }
 
 export default function Projects() {
+  const t = useTranslation();
+  const { language } = useLanguage();
   const [visible, setVisible] = useState<number[]>([]);
   const [cursor, setCursor] = useState({ x: 0, y: 0, active: false });
   useEffect(() => {
@@ -42,10 +46,10 @@ export default function Projects() {
   return <main className="work-page">
     <RestoreScroll path="/projects" />
     <SiteHeader />
-    <section className="work-intro"><p className="eyebrow">Selected work</p><h1>A closer look at what I’ve <i>shaped.</i></h1><p>A selection of work across product, UI/UX, branding, packaging, and digital experiences.</p></section>
-    <section className="work-grid" aria-label="Project archive">{columns.map((column, columnIndex) => <div className={`work-column work-column--${columnIndex + 1}`} key={columnIndex}>{column.map((project) => { const index = projects.indexOf(project); const hasImage = Boolean(project.image); const isEmpty = project.title === ''; return <ProjectLink href={`/projects/${project.slug}`} source="work" data-index={index} aria-label={isEmpty ? 'Project Four' : `${project.title}${project.subtitle ? `, ${project.subtitle}` : ''}`} className={`work-card work-card--tone-${project.tone} work-card--${index} ${hasImage ? 'work-card--image' : ''} ${isEmpty ? 'work-card--empty' : ''} ${visible.includes(index) ? 'is-visible' : ''}`} key={project.slug} onPointerEnter={moveCursor} onPointerMove={moveCursor} onPointerLeave={() => setCursor((current) => ({ ...current, active: false }))}>{isEmpty ? null : <><div className="work-art" aria-hidden="true">{project.image ? <img src={project.image} alt="" width={1600} height={2000} /> : <><span /><b /><i /></>}</div><TagRow tags={project.tags}/><span className="focus-cue">View details ↗</span></>}</ProjectLink>; })}</div>)}</section>
-    <div className={`work-cursor ${cursor.active ? 'is-active' : ''}`} style={{ transform: `translate3d(${cursor.x}px,${cursor.y}px,0) translate(-50%,-50%)` }} aria-hidden="true"><span>View<br />Details</span></div>
-    <PortfolioFooter statement="Shape what matters" />
+    <section className="work-intro"><p className="eyebrow">{t('work.selected', 'Selected work')}</p><h1 className={language === 'zh' ? 'zh-display' : undefined}>{language === 'zh' ? t('work.title', 'A closer look at what I’ve shaped.') : <>A closer look at what I’ve <i>shaped.</i></>}</h1><p>{t('work.intro', 'A selection of work across product, UI/UX, branding, packaging, and digital experiences.')}</p></section>
+    <section className="work-grid" aria-label={t('work.title', 'Project archive')}>{columns.map((column, columnIndex) => <div className={`work-column work-column--${columnIndex + 1}`} key={columnIndex}>{column.map((project) => { const index = projects.indexOf(project); const hasImage = Boolean(project.image); const isEmpty = project.title === ''; return <ProjectLink href={`/projects/${project.slug}`} source="work" data-index={index} aria-label={isEmpty ? 'Project Four' : `${project.title}${project.subtitle ? `, ${project.subtitle}` : ''}`} className={`work-card work-card--tone-${project.tone} work-card--${index} ${hasImage ? 'work-card--image' : ''} ${isEmpty ? 'work-card--empty' : ''} ${visible.includes(index) ? 'is-visible' : ''}`} key={project.slug} onPointerEnter={moveCursor} onPointerMove={moveCursor} onPointerLeave={() => setCursor((current) => ({ ...current, active: false }))}>{isEmpty ? null : <><div className="work-art" aria-hidden="true">{project.image ? <img src={project.image} alt="" width={1600} height={2000} /> : <><span /><b /><i /></>}</div><TagRow tags={project.tags}/><span className="focus-cue">{t('project.view', 'View details')} ↗</span></>}</ProjectLink>; })}</div>)}</section>
+    <div className={`work-cursor ${cursor.active ? 'is-active' : ''}`} style={{ transform: `translate3d(${cursor.x}px,${cursor.y}px,0) translate(-50%,-50%)` }} aria-hidden="true"><span>{language === 'zh' ? t('project.view', '進去看看') : <>View<br />Details</>}</span></div>
+    <PortfolioFooter />
     <BackToTop />
   </main>;
 }

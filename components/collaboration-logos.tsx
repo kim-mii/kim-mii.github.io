@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from './translation';
 
 const logos = [
   { name: 'Shoalter', category: 'Product Design Team', src: '/assets/collaboration/shoalter-logo.png', width: 1200, height: 630 },
@@ -14,6 +15,7 @@ const logos = [
 ];
 
 export function CollaborationLogos() {
+  const t = useTranslation();
   const [active, setActive] = useState<string | null>(null);
   const [below, setBelow] = useState(false);
   const [interacted, setInteracted] = useState(false);
@@ -22,17 +24,18 @@ export function CollaborationLogos() {
     setBelow(target.getBoundingClientRect().top < 104);
   };
   const logoClass = (tone = '', hasImage = true) => `logo-box ${tone ? `logo-box--${tone.replace(' ', ' logo-box--')}` : ''} ${hasImage ? '' : 'logo-box--fallback'}`;
-  return <div className={`logo-carousel ${interacted ? 'is-interacted' : ''}`} aria-label="Brands Kimberly has collaborated with" onPointerDown={(event) => { if (event.pointerType === 'touch') setInteracted(true); }}>
+  return <div className={`logo-carousel ${interacted ? 'is-interacted' : ''}`} aria-label={t('collaboration.aria', 'Brands Kimberly has collaborated with')} onPointerDown={(event) => { if (event.pointerType === 'touch') setInteracted(true); }}>
     <div className="logo-carousel-track">
       {[false, true].map((clone) => <div className="logo-carousel-group" aria-hidden={clone || undefined} key={clone ? 'clone' : 'original'}>
         {logos.map(({ name, category, src, width, height, tone = '' }) => {
+          const visibleCategory = t(`collaboration.category.${name}`, category);
           const tooltipId = `collaboration-tooltip-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
           return clone
             ? <div className={logoClass(tone, Boolean(src))} key={`${name}-clone`}>{src && <img src={src} alt="" width={width} height={height} />}<span className="logo-fallback" aria-hidden="true">{name}</span></div>
-            : <button className={logoClass(tone, Boolean(src))} type="button" key={name} aria-label={`${name} — ${category}`} aria-describedby={tooltipId} onPointerEnter={(event) => activate(name, event.currentTarget)} onPointerLeave={() => setActive(null)} onFocus={(event) => activate(name, event.currentTarget)} onBlur={() => setActive(null)} onClick={(event) => activate(active === name ? '' : name, event.currentTarget)}>
+            : <button className={logoClass(tone, Boolean(src))} type="button" key={name} aria-label={`${name} — ${visibleCategory}`} aria-describedby={tooltipId} onPointerEnter={(event) => activate(name, event.currentTarget)} onPointerLeave={() => setActive(null)} onFocus={(event) => activate(name, event.currentTarget)} onBlur={() => setActive(null)} onClick={(event) => activate(active === name ? '' : name, event.currentTarget)}>
               {src && <img src={src} alt={`${name} logo`} width={width} height={height} onError={(event) => event.currentTarget.parentElement?.classList.add('has-image-error')} />}
               <span className="logo-fallback" aria-hidden="true">{name}</span>
-              <span className={`logo-tooltip ${active === name ? 'is-active' : ''} ${active === name && below ? 'logo-tooltip--below' : ''}`} id={tooltipId} role="tooltip"><span>{name}</span><span>{category}</span></span>
+              <span className={`logo-tooltip ${active === name ? 'is-active' : ''} ${active === name && below ? 'logo-tooltip--below' : ''}`} id={tooltipId} role="tooltip"><span>{name}</span><span>{visibleCategory}</span></span>
             </button>;
         })}
       </div>)}

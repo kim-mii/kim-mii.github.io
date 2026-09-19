@@ -2,6 +2,8 @@
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslation } from './translation';
+import { LanguageSwitcher } from './site-header';
 
 const projectOrder = [
   '/projects/hktv-3pl-mms',
@@ -34,16 +36,17 @@ function staticRoute(path: string) {
   return `${normalizedPath}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
 }
 
-function ArrowControl({ direction, href, source, year, milestoneId, returnContext }: {
+function ArrowControl({ direction, href, source, year, milestoneId, returnContext, label, tooltip, unavailableLabel }: {
   direction: 'previous' | 'next';
   href?: string;
   source?: string;
   year?: string;
   milestoneId?: string;
   returnContext: ReturnContext | null;
+  label: string;
+  tooltip: string;
+  unavailableLabel: string;
 }) {
-  const label = direction === 'previous' ? 'View previous project' : 'View next project';
-  const tooltip = direction === 'previous' ? 'Previous project' : 'Next project';
   const arrow = direction === 'previous' ? '←' : '→';
   const originalSource = source === 'home' || source === 'work' || source === 'milestones' ? source : 'work';
   const query = new URLSearchParams({ from: originalSource });
@@ -59,7 +62,7 @@ function ArrowControl({ direction, href, source, year, milestoneId, returnContex
   }));
   return href
     ? <a href={staticRoute(`${href}?${query.toString()}`)} aria-label={label} className="case-arrow" title={tooltip} onClick={rememberProject}><span aria-hidden="true">{arrow}</span></a>
-    : <span aria-disabled="true" aria-label={`${tooltip} unavailable`} className="case-arrow case-arrow--disabled" title={`${tooltip} unavailable`}><span aria-hidden="true">{arrow}</span></span>;
+    : <span aria-disabled="true" aria-label={unavailableLabel} className="case-arrow case-arrow--disabled" title={unavailableLabel}><span aria-hidden="true">{arrow}</span></span>;
 }
 
 export function ProjectNavigation() {
@@ -73,6 +76,7 @@ export function ProjectNavigation() {
   const next = index >= 0 && index < projectOrder.length - 1 ? projectOrder[index + 1] : undefined;
   const [returnContext, setReturnContext] = useState<ReturnContext | null>(null);
   const [navigationReady, setNavigationReady] = useState(false);
+  const t = useTranslation();
 
   useEffect(() => {
     try {
@@ -96,7 +100,7 @@ export function ProjectNavigation() {
   const safeMilestoneId = milestoneId && /^year-\d{4}(?:-[a-z0-9-]+)?$/.test(milestoneId) ? milestoneId : year && /^\d{4}$/.test(year) ? `year-${year}` : undefined;
   const internalReturn = matchingContext?.returnPath?.startsWith('/') ? matchingContext.returnPath : undefined;
   const destination = source === 'milestones' ? `/milestone${safeMilestoneId ? `#${safeMilestoneId}` : ''}` : source === 'home' ? '/' : source === 'work' ? '/projects' : source === 'internal' && internalReturn ? internalReturn : '/projects';
-  const resolvedLabel = source === 'milestones' ? '← Back to My Milestones' : source === 'home' ? '← Back to Home' : source === 'work' ? '← Back to My Work' : source === 'internal' && internalReturn ? '← Back to previous page' : '← Back to My Work';
+  const resolvedLabel = source === 'milestones' ? t('back.milestones', '← Back to My Milestones') : source === 'home' ? t('back.home', '← Back to Home') : source === 'work' ? t('back.work', '← Back to My Work') : source === 'internal' && internalReturn ? t('back.previous', '← Back to previous page') : t('back.work', '← Back to My Work');
   // A static export cannot read the query string during its first render. Keep
   // that first frame neutral until the browser has resolved the real source.
   const label = navigationReady ? resolvedLabel : '← Back';
@@ -107,12 +111,13 @@ export function ProjectNavigation() {
   };
   return <><nav className="case-nav" aria-label="Project navigation" style={{ position: 'sticky', top: 0, zIndex: 30 }}>
     <a href={staticRoute(destination)} className={`case-back ${navigationReady ? '' : 'case-back--pending'}`} aria-label={label} tabIndex={navigationReady ? undefined : -1} onClick={rememberScroll}>{label}</a>
-    <div className="case-arrows"><ArrowControl direction="previous" href={previous} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /><ArrowControl direction="next" href={next} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} /></div>
+    <div className="case-arrows"><LanguageSwitcher /><ArrowControl direction="previous" href={previous} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} label={t('project.previous', 'View previous project')} tooltip={t('project.previous', 'Previous project')} unavailableLabel={t('project.previousUnavailable', 'Previous project unavailable')} /><ArrowControl direction="next" href={next} source={source} year={year} milestoneId={milestoneId} returnContext={matchingContext} label={t('project.next', 'View next project')} tooltip={t('project.next', 'Next project')} unavailableLabel={t('project.nextUnavailable', 'Next project unavailable')} /></div>
   </nav><BackToTop /></>;
 }
 
 export function BackToTop({ onBeforeScroll }: { onBeforeScroll?: () => void }) {
   const [visible, setVisible] = useState(false);
+  const t = useTranslation();
 
   useEffect(() => {
     const updateVisibility = () => setVisible(window.scrollY > 360);
@@ -125,5 +130,5 @@ export function BackToTop({ onBeforeScroll }: { onBeforeScroll?: () => void }) {
     onBeforeScroll?.();
     window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   };
-  return <button className={`back-to-top ${visible ? 'is-visible' : ''}`} type="button" aria-label="Back to top" onClick={scrollToTop}><span aria-hidden="true">↑</span></button>;
+  return <button className={`back-to-top ${visible ? 'is-visible' : ''}`} type="button" aria-label={t('back.top', 'Back to top')} onClick={scrollToTop}><span aria-hidden="true">↑</span></button>;
 }

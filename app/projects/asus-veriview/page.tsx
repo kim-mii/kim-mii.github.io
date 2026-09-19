@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { ProjectNavigation } from '../../../components/project-navigation';
+import { useTranslation } from '../../../components/translation';
 
 export default function AsusVeriView() {
+  const t = useTranslation();
   const [visible, setVisible] = useState<string[]>([]);
   useEffect(() => {
     const items = [...document.querySelectorAll<HTMLElement>('.case-reveal')];
@@ -17,7 +19,7 @@ export default function AsusVeriView() {
   const reveal = (id: string) => `case-reveal ${visible.includes(id) ? 'is-visible' : ''}`;
   return <main className="case-page">
     <ProjectNavigation />
-    <section className="case-intro"><h1>ASUS VeriView</h1><div className="case-tags"><span>UX Research</span><span>UI Design</span><span>Hardware R&amp;D</span></div><p className="case-lede">Designing a dedicated second-screen experience for business professionals — such as bank and cashier teams — to access essential controls and information with greater clarity.</p></section>
+    <section className="case-intro"><h1>ASUS VeriView</h1><div className="case-tags"><span>UX Research</span><span>UI Design</span><span>Hardware R&amp;D</span></div><p className="case-lede">{t('lede.ASUS VeriView', 'Designing a dedicated second-screen experience for business professionals — such as bank and cashier teams — to access essential controls and information with greater clarity.')}</p></section>
     <figure className={`${reveal('final')} case-final`} data-reveal="final"><img src="/assets/projects/asus-veriview/veriview-final-1.jpg" loading="lazy" alt="ASUS VeriView UX research, information architecture, wireframes, design system, and final UI" width={1400} height={10085} /></figure>
     <section className={`${reveal('video')} case-video`} data-reveal="video"><video controls preload="metadata" aria-label="ASUS VeriView interface walkthrough"><source src="/assets/projects/asus-veriview/veriview.mp4" type="video/mp4" />Your browser does not support this video.</video></section>
   </main>;

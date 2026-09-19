@@ -7,5 +7,5 @@ html,body{overflow-x:clip}.work-page{overflow:visible}.resume-menu{display:inlin
 .footer-links .resume-options a{border-bottom:0}
 .resume-options a:hover,.resume-options a:focus-visible{background:var(--mist);outline:none}
 .resume-options a:focus-visible{box-shadow:inset 0 0 0 2px var(--blush)}
-footer{padding-bottom:78px}footer .footer-links{align-items:center;flex-wrap:wrap;position:relative;z-index:2}footer small{bottom:25px;z-index:1}
+footer{padding-bottom:78px}footer .footer-links{align-items:flex-end;flex-wrap:wrap;position:relative;z-index:2}footer .footer-links>a,footer .footer-links>.resume-menu{align-self:flex-end}footer .footer-links .resume-toggle{display:block;line-height:1.55}footer small{bottom:25px;z-index:1}
 @media(max-width:700px){.resume-toggle{min-height:44px}.resume-options{max-width:calc(100vw - (var(--page-gutter) * 2));width:max-content}.resume-options a{min-height:44px;padding:13px}footer{padding-bottom:82px}footer .footer-links{align-items:flex-start;flex-wrap:wrap;row-gap:8px}footer .resume-menu{width:auto}footer .resume-toggle{justify-content:flex-start;width:auto}footer .resume-options{min-width:172px;width:max-content}}

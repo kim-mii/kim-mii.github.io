@@ -1,0 +1,126 @@
+@font-face {
+  font-family: 'ChenYuluoyan';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/ChenYuluoyan-2.0-Thin.ttf') format('truetype');
+}
+
+.language-gate { inset: 0; position: fixed; z-index: 1000; }
+.language-gate__backdrop { background: rgba(38, 42, 42, .42); inset: 0; position: absolute; }
+.language-gate__dialog { background: var(--paper); border: 1px solid var(--line); box-shadow: 0 20px 60px rgba(39, 45, 45, .17); left: 50%; margin: 0; max-width: calc(100vw - 40px); padding: clamp(28px, 4vw, 46px); position: absolute; text-align: center; top: 50%; transform: translate(-50%, -50%); width: min(430px, 100%); }
+.language-gate__dialog p { color: var(--ink); font: clamp(28px, 4vw, 40px)/.92 'Crimson Pro', serif; letter-spacing: -.025em; margin: 0 0 28px; }
+.language-gate__dialog p span { font-size: .8em; }
+.language-gate__dialog div { display: flex; gap: 10px; justify-content: center; }
+.language-gate__dialog button { background: transparent; border: 1px solid var(--ink); color: var(--ink); cursor: pointer; min-height: 46px; min-width: 128px; padding: 9px 18px; }
+.language-gate__dialog button:hover, .language-gate__dialog button:focus-visible { background: var(--blush); outline: 2px solid var(--mist); outline-offset: 3px; }
+
+/* Keep the page hidden until the saved locale has been restored, avoiding a fallback-language paint. */
+html.language-preparing body { visibility: hidden; }
+
+.header-actions { align-items: center; display: flex; gap: 8px; }
+.language-switcher { position: relative; }
+.language-switcher__toggle { align-items: center; background: transparent; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); cursor: pointer; display: inline-flex; height: 40px; justify-content: center; padding: 0; width: 40px; }
+.language-switcher__toggle:hover, .language-switcher__toggle:focus-visible { background: var(--mist); border-color: var(--mist); outline: 2px solid var(--mist); outline-offset: 3px; }
+.language-switcher__toggle svg { height: 18px; width: 18px; }
+.language-switcher__menu { background: #fff; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 0; min-width: 170px; padding: 7px; position: absolute; right: 0; top: calc(100% + 8px); z-index: 90; }
+.language-switcher__menu button { background: transparent; border: 0; border-radius: 0; color: var(--ink); cursor: pointer; font: 500 .78rem/1.3 'Plus Jakarta Sans', sans-serif; min-height: 38px; padding: 10px; text-align: left; transition: background .2s; }
+.language-switcher__menu button:hover, .language-switcher__menu button:focus-visible, .language-switcher__menu button[aria-current=true] { background: var(--mist); outline: none; }
+.language-switcher__menu button:focus-visible { box-shadow: inset 0 0 0 2px var(--blush); }
+
+/* Only content explicitly marked as Chinese display copy opts into this font. */
+html[lang='zh-Hant-TW'] .zh-display { font-family: 'ChenYuluoyan', 'Noto Serif TC', 'Songti TC', serif; font-weight: 400; letter-spacing: 0; line-height: 1.02; }
+html[lang='zh-Hant-TW'] .about-copy .reveal { opacity: 1; transform: none; }
+
+/* Chinese utility text uses a readable 14px minimum without changing English typography. */
+html[lang='zh-Hant-TW'] { --zh-small-text: 14px; }
+html[lang='zh-Hant-TW'] nav a,
+html[lang='zh-Hant-TW'] .eyebrow,
+html[lang='zh-Hant-TW'] .language-switcher__menu button,
+html[lang='zh-Hant-TW'] .resume-options a,
+html[lang='zh-Hant-TW'] .footer-links a,
+html[lang='zh-Hant-TW'] footer small,
+html[lang='zh-Hant-TW'] .home-story-link,
+html[lang='zh-Hant-TW'] .home-all-work.text-button,
+html[lang='zh-Hant-TW'] .work-tags span,
+html[lang='zh-Hant-TW'] .case-tags span,
+html[lang='zh-Hant-TW'] .project-tag,
+html[lang='zh-Hant-TW'] .case-meta dt,
+html[lang='zh-Hant-TW'] .case-meta dd,
+html[lang='zh-Hant-TW'] .case-arrow::after,
+html[lang='zh-Hant-TW'] .milestone-year,
+html[lang='zh-Hant-TW'] .explore-hint,
+html[lang='zh-Hant-TW'] .milestone-detail .milestone-project,
+html[lang='zh-Hant-TW'] .logo-tooltip,
+html[lang='zh-Hant-TW'] .tag-tooltip,
+html[lang='zh-Hant-TW'] .project-caption > span,
+html[lang='zh-Hant-TW'] .project-caption p,
+html[lang='zh-Hant-TW'] .home-card-copy p,
+html[lang='zh-Hant-TW'] .work-card-copy p,
+html[lang='zh-Hant-TW'] .hotel-hero > p,
+html[lang='zh-Hant-TW'] .hotel-rail b,
+html[lang='zh-Hant-TW'] .hotel-visual-top,
+html[lang='zh-Hant-TW'] .hotel-visual-slot figcaption span,
+html[lang='zh-Hant-TW'] .hotel-facts b,
+html[lang='zh-Hant-TW'] .hotel-before-after article b,
+html[lang='zh-Hant-TW'] .hotel-journey li > b,
+html[lang='zh-Hant-TW'] .hotel-confirm-stage .hotel-confirm-motion span,
+html[lang='zh-Hant-TW'] .hotel-device figcaption { font-size: var(--zh-small-text) !important; }
+
+/* The Chinese Hero uses the same zigzag and blush rules as the English Hero. */
+html[lang='zh-Hant-TW'] .hero h1.zh-display .hero-clarity { background: linear-gradient(transparent 88%, var(--blush) 0); }
+.milestone-zh-desktop-break { display: none; }
+.home-story-link { border-bottom: 1px solid var(--ink); display: inline-flex; font: 500 .75rem/1.3 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; min-height: 44px; padding: 8px 0 6px; transition: color .2s, border-color .2s; }
+.home-story-link:hover, .home-story-link:focus-visible { border-color: var(--mist); color: #687071; outline: none; }
+.home-story-link:focus-visible { box-shadow: 0 2px 0 var(--blush); }
+
+html[lang='zh-Hant-TW'] .milestone-page .milestone-intro h1 { line-height: 1.04; }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-highlight { font-family: inherit; font-style: inherit; position: relative; z-index: 0; }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-highlight::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 32'%3E%3Cg fill='none' stroke='%23c2d2d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='5'%3E%3Cpath d='M4 23 18 10 27 24 41 7 51 22 65 8 75 23 89 6 100 21 114 9 125 24 139 7 150 21 164 9 175 23 189 7 201 20 216 9 235 15'/%3E%3Cpath d='M3 17 15 8 26 19 38 5 49 17 61 5 73 19 86 7 98 18 109 5 122 18 134 6 147 20 160 6 171 19 183 5 194 17 207 6 221 17 237 10' opacity='.8'/%3E%3Cpath d='M8 28 20 16 31 27 44 14 57 27 70 14 83 26 96 14 109 28 123 14 136 26 150 13 163 27 177 15 190 26 204 13 217 24 232 15' opacity='.6'/%3E%3C/g%3E%3C/svg%3E") center/100% 100% no-repeat; bottom: -.01em; content: ''; height: .16em; left: -1%; position: absolute; width: 102%; z-index: -1; }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-title { line-height: 1.34; letter-spacing: 0; max-width: 25ch; }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-detail { max-width: min(100%, 38rem); }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-detail p { font-size: .92rem; line-height: 1.9; max-width: 36rem; }
+html[lang='zh-Hant-TW'] .milestone-page .milestone-project, html[lang='zh-Hant-TW'] .milestone-page .project-link-list a { letter-spacing: .025em; line-height: 1.75; }
+html[lang='zh-Hant-TW'] .experience-labels span { min-width: max-content; white-space: nowrap; }
+html[lang='zh-Hant-TW'] .home-all-work.text-button { border-bottom: 1px solid var(--ink); display: inline-flex; font: 500 .75rem/1.3 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; min-height: 44px; padding: 8px 0 6px; }
+html[lang='zh-Hant-TW'] .home-all-work.text-button span { font: inherit; margin-left: .45em; padding: 0; }
+html[lang='zh-Hant-TW'] .home-all-work.text-button:hover, html[lang='zh-Hant-TW'] .home-all-work.text-button:focus-visible { border-color: var(--mist); color: #687071; outline: none; }
+html[lang='zh-Hant-TW'] .home-all-work.text-button:focus-visible { box-shadow: 0 2px 0 var(--blush); }
+
+@media (min-width: 701px) {
+  .about-intro { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+  .about-intro > .eyebrow, .about-intro > h1, .about-intro > .about-story { margin-left: auto; margin-right: auto; max-width: 1180px; width: 100%; }
+  .about-story { gap: clamp(48px, 7vw, 104px); grid-template-columns: minmax(0, 1.45fr) minmax(250px, .55fr); }
+  .about-copy { max-width: none; }
+  html[lang='zh-Hant-TW'] .milestone-intro { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+  html[lang='zh-Hant-TW'] .milestone-intro h1 { font-size: clamp(4.8rem, 8vw, 9.5rem); max-width: none; white-space: normal; }
+}
+
+@media (min-width: 901px) {
+  .case-intro h1, .work-intro h1, .about-intro h1, .hero h1 { white-space: nowrap; }
+  .case-intro h1 { font-size: clamp(4rem, 8.5vw, 10rem); }
+  .milestone-zh-desktop-break { display: block; }
+  html[lang='zh-Hant-TW'] .milestone-intro h1 { white-space: nowrap; }
+}
+
+@media (min-width: 1200px) {
+  html[lang='zh-Hant-TW'] .hero h1.zh-display { font-size: clamp(4.8rem, 7.4vw, 9rem); max-width: none; white-space: nowrap; }
+}
+
+.case-nav .language-switcher__toggle { height: 36px; width: 36px; }
+.case-nav .language-switcher__toggle svg { height: 16px; width: 16px; }
+.case-back--pending { visibility: hidden; }
+
+@media (max-width: 700px) {
+  .case-nav .language-switcher__toggle { height: 34px; width: 34px; }
+  .case-nav .language-switcher__toggle svg { height: 15px; width: 15px; }
+  .language-switcher__menu button { min-height: 44px; padding: 13px; }
+}
+
+@media (max-width: 600px) {
+  .header-actions { gap: 1px; }
+  .language-switcher__toggle { height: 40px; width: 40px; }
+  .language-switcher__menu { right: -4px; }
+  .language-gate__dialog div { flex-direction: column; }
+  .language-gate__dialog button { width: 100%; }
+}

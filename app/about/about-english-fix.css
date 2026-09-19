@@ -1,0 +1,2 @@
+/* Keep English About copy readable against the white page background. */
+html[lang='en'] .about-copy p { color: #989e9d; }
