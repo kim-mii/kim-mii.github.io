@@ -56,7 +56,7 @@ const personSchema = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en" suppressHydrationWarning><body>
-    <Script id="language-preference-bootstrap" strategy="beforeInteractive">{`(function(){try{var language=localStorage.getItem('kimberlicious-language');document.documentElement.dataset.languagePreference=(language==='zh'||language==='en')?language:'';}catch(e){}document.documentElement.classList.add('language-preparing');})();`}</Script>
+    <Script id="language-preference-bootstrap" strategy="beforeInteractive">{`(function(){try{var language=localStorage.getItem('kimberlicious-language');if(language==='zh'||language==='en'){document.documentElement.dataset.languagePreference=language;document.documentElement.lang=language==='zh'?'zh-Hant-TW':'en';}else{document.documentElement.dataset.languagePreference='';}}catch(e){}document.documentElement.classList.add('language-preparing');})();`}</Script>
     <Script id="kimberly-toh-person-schema" type="application/ld+json" strategy="beforeInteractive">
       {JSON.stringify(personSchema)}
     </Script>
