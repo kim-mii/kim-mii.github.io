@@ -24,7 +24,7 @@ function TagRow({ tags }: { tags: string[] }) { return <div className="work-tags
 export default function Home() {
   const t = useTranslation();
   const { language } = useLanguage();
-  const chineseHeroTitle = t('home.title', '把複雜變清晰');
+  const chineseHeroTitle = t('home.title', '把複雜梳理為清晰');
   const [beforeComplex, afterComplex = ''] = chineseHeroTitle.split('複雜');
   const [betweenComplexAndClarity, afterClarity = ''] = afterComplex.split('清晰');
   const [visible, setVisible] = useState<number[]>([]);
