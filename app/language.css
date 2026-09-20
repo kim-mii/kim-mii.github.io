@@ -66,8 +66,12 @@ html[lang='zh-Hant-TW'] .hotel-journey li > b,
 html[lang='zh-Hant-TW'] .hotel-confirm-stage .hotel-confirm-motion span,
 html[lang='zh-Hant-TW'] .hotel-device figcaption { font-size: var(--zh-small-text) !important; }
 
-/* The Chinese Hero uses the same zigzag and blush rules as the English Hero. */
-html[lang='zh-Hant-TW'] .hero h1.zh-display .hero-clarity { background: linear-gradient(transparent 88%, var(--blush) 0); }
+/* The blush mark is shared by English clarity and the specified Chinese words. */
+.hero h1 .hero-clarity { background: linear-gradient(transparent 76%, var(--blush) 0); }
+html[lang='zh-Hant-TW'] .hero h1.zh-display .hero-clarity { font-style: normal; }
+.zh-pink-highlight { background: linear-gradient(transparent 76%, var(--blush) 0); font-style: normal; }
+.about-kim-highlight { position: relative; z-index: 0; }
+.about-kim-highlight::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 32'%3E%3Cg fill='none' stroke='%23c2d2d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='5'%3E%3Cpath d='M4 23 18 10 27 24 41 7 51 22 65 8 75 23 89 6 100 21 114 9 125 24 139 7 150 21 164 9 175 23 189 7 201 20 216 9 235 15'/%3E%3Cpath d='M3 17 15 8 26 19 38 5 49 17 61 5 73 19 86 7 98 18 109 5 122 18 134 6 147 20 160 6 171 19 183 5 194 17 207 6 221 17 237 10' opacity='.8'/%3E%3Cpath d='M8 28 20 16 31 27 44 14 57 27 70 14 83 26 96 14 109 28 123 14 136 26 150 13 163 27 177 15 190 26 204 13 217 24 232 15' opacity='.6'/%3E%3C/g%3E%3C/svg%3E") center/100% 100% no-repeat; bottom: -.01em; content: ''; height: .16em; left: -1%; position: absolute; width: 102%; z-index: -1; }
 .milestone-zh-desktop-break { display: none; }
 .home-story-link { border-bottom: 1px solid var(--ink); display: inline-flex; font: 500 .75rem/1.3 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; min-height: 44px; padding: 8px 0 6px; transition: color .2s, border-color .2s; }
 .home-story-link:hover, .home-story-link:focus-visible { border-color: var(--mist); color: #687071; outline: none; }
@@ -104,6 +108,16 @@ html[lang='zh-Hant-TW'] .home-all-work.text-button:focus-visible { box-shadow: 0
 
 @media (min-width: 1200px) {
   html[lang='zh-Hant-TW'] .hero h1.zh-display { font-size: clamp(4.8rem, 7.4vw, 9rem); max-width: none; white-space: nowrap; }
+}
+
+/* The long English work title gets a full measure only on wide desktops;
+   smaller viewports retain natural wrapping instead of overflowing. */
+@media (min-width: 1800px) {
+  html[lang='en'] .work-intro h1 { font-size: clamp(4.5rem, 6.8vw, 8rem); max-width: none; white-space: nowrap; }
+}
+
+@media (min-width: 901px) and (max-width: 1799px) {
+  html[lang='en'] .work-intro h1 { white-space: normal; }
 }
 
 /* Keep the English hero headline as one line on large desktops, then use a

@@ -27,7 +27,7 @@ export default function About() {
   return <main className="about-page">
     <SiteHeader />
     <section className="about-intro">
-      <p className="eyebrow reveal">{t('about.eyebrow', 'A little more')}</p><h1 className="reveal">{language === 'zh' ? t('about.title', 'Kimberly') : <>About <i>me.</i></>}</h1>
+      <p className="eyebrow reveal">{t('about.eyebrow', 'A little more')}</p><h1 className="reveal">{language === 'zh' ? <><span className="about-kim-highlight">Kim</span>berly</> : <>About <i>me.</i></>}</h1>
       <div className="about-story"><div className="about-copy">{localizedParagraphs.map((paragraph, index) => <p className="reveal" style={{ transitionDelay: `${index * 90}ms` }} key={paragraph}>{paragraph}</p>)}<div className="resume-menu reveal"><ResumeSelector /></div></div><div className="portrait-wrap reveal"><img src="/assets/me/kimmy.jpg" alt="Kimberly Toh standing beneath an iridescent fabric installation" width={2200} height={3910} /></div></div>
     </section>
     <PortfolioFooter />

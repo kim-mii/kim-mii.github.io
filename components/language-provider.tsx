@@ -25,7 +25,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (!ready) return;
     document.documentElement.lang = language === 'zh' ? 'zh-Hant-TW' : 'en';
     document.documentElement.dataset.languagePreference = language;
-    document.documentElement.classList.remove('language-preparing');
+    const reveal = () => document.documentElement.classList.remove('language-preparing');
+    if (language !== 'zh' || !('fonts' in document)) { reveal(); return; }
+    document.fonts.load('400 72px ChenYuluoyan', '從把故事說好，到把產品做好').then(reveal, reveal);
   }, [language, ready]);
   useEffect(() => {
     if (!ready) return;
