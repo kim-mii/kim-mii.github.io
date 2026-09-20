@@ -1,11 +1,6 @@
-/* Jason Handwriting is split into complementary character files. Giving each
-   file the same family lets the browser select the file containing a glyph. */
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting1.woff2') format('woff2'); }
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting2.woff2') format('woff2'); }
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting3.woff2') format('woff2'); }
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting4.woff2') format('woff2'); }
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting5.woff2') format('woff2'); }
-@font-face { font-family: 'Jason Handwriting'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/JasonHandwriting5p.woff2') format('woff2'); }
+/* This display face is deliberately scoped to .zh-display, so Chinese body
+   copy, labels, buttons, and controls keep their existing readable typeface. */
+@font-face { font-family: 'ChenYuluoyan'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/ChenYuluoyan-2.0-Thin.ttf') format('truetype'); }
 
 .language-gate { inset: 0; position: fixed; z-index: 1000; }
 .language-gate__backdrop { background: rgba(38, 42, 42, .42); inset: 0; position: absolute; }
@@ -30,7 +25,7 @@ html.language-preparing body { visibility: hidden; }
 .language-switcher__menu button:focus-visible { box-shadow: inset 0 0 0 2px var(--blush); }
 
 /* Only content explicitly marked as Chinese display copy opts into this font. */
-html[lang='zh-Hant-TW'] .zh-display { font-family: 'Jason Handwriting', 'Noto Serif TC', 'Songti TC', serif; font-weight: 400; letter-spacing: 0; line-height: 1.02; }
+html[lang='zh-Hant-TW'] .zh-display { font-family: 'ChenYuluoyan', 'Noto Serif TC', 'Songti TC', serif; font-weight: 400; letter-spacing: 0; line-height: 1.02; }
 html[lang='zh-Hant-TW'] .about-copy .reveal { opacity: 1; transform: none; }
 /* About copy is essential page content, not decoration. Keep it visible even
    when an intersection observer is unavailable or delayed in English mode. */
@@ -109,6 +104,13 @@ html[lang='zh-Hant-TW'] .home-all-work.text-button:focus-visible { box-shadow: 0
 
 @media (min-width: 1200px) {
   html[lang='zh-Hant-TW'] .hero h1.zh-display { font-size: clamp(4.8rem, 7.4vw, 9rem); max-width: none; white-space: nowrap; }
+}
+
+/* Keep the English hero headline as one line on large desktops, then use a
+   deliberate two-line composition before it can overflow at MacBook widths. */
+.hero-english-line { font-weight: inherit; }
+@media (min-width: 701px) and (max-width: 1760px) {
+  html[lang='en'] .hero h1:not(.zh-display) .hero-english-line { display: block; }
 }
 
 .case-nav .language-switcher__toggle { height: 36px; width: 36px; }
