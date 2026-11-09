@@ -1,6 +1,6 @@
 # Portfolio asset library
 
-This folder is the canonical source for user-facing portfolio media. The website serves it through the `work/site/public/assets` symlink and references each asset with `/assets/...` URLs.
+This folder is the canonical source for every user-facing portfolio asset: images, videos, GIFs, logos, icons, PDFs, and font files. The local website’s `work/site/public/assets` deployment mirror uses hard links to these files, so local edits made here are reflected in the deployable asset path without maintaining divergent copies. The public URL pattern remains `/assets/...`.
 
 ## File manifest
 
@@ -28,7 +28,9 @@ This folder is the canonical source for user-facing portfolio media. The website
 | `veriview-cover.jpg`, `veriview-final-1.jpg`, `veriview.mp4` | `projects/asus-veriview/` | `work/site/public/` | moved | ASUS VeriView card, detail image, and video |
 | `rog-armoury-crate-cover.jpg`, `rog-armoury-crate-final.jpg` | `projects/rog-armoury-crate-3/` | `work/site/public/` | moved | ROG Armoury Crate card and detail page |
 | `kimmy.jpg` | `me/` | `work/site/public/kimmy.jpg` | moved | Me page portrait |
+| `Logomark.png` | `shared/` | `/Users/kimmy/Documents/Codex/portfolio-assets/Logomark.png` | moved | Global header logo and social preview |
 | `favicon.svg` | `shared/` | `work/site/public/favicon.svg` | moved | Site icon |
+| `ChenYuluoyan-2.0-Thin.ttf`, `CrimsonPro-*.ttf`, `PlusJakartaSans-*.ttf`, `JasonHandwriting*.woff2` | `shared/fonts/` | local website fonts and Google Fonts source | moved / copied | Global typography and Chinese display headings |
 | `shoalter-logo.png` | `collaboration/` | `https://assets.website-files.com/6018a7ac15b45d2e0b9196d7/6054162f71a8ea31d1d1b178_Let%E2%80%99s%20Talk.png` | copied (downloaded) | Home collaboration carousel |
 | `hktvmall-logo.png` | `collaboration/` | `https://images.seeklogo.com/logo-png/34/1/hktv-mall-logo-png_seeklogo-345079.png` | copied (downloaded) | Home collaboration carousel |
 | `asus-logo.jpg` | `collaboration/` | `https://i.pinimg.com/736x/dc/14/7a/dc147a75b3bd78858a4cbade289f5c4f.jpg` | copied (downloaded) | Home collaboration carousel |
@@ -46,7 +48,9 @@ The previous `image.pitchbook.com` URL returned HTTP 403 during migration. The c
 
 ## Verification notes
 
-- Local public assets were moved into this library; `work/site/public` now contains only the `assets` symlink.
+- All currently served `public/assets` files have a corresponding canonical file in this library.
+- Locally, the deployment mirror is hard-linked to this library. GitHub Pages receives the same assets as tracked repository files when the site is deployed.
+- The website no longer imports Google Fonts at runtime; the exact Crimson Pro and Plus Jakarta Sans weights used by the site are stored in `shared/fonts/`.
 - The external-volume originals remain untouched and were copied into this library.
 - The two Desktop PDFs remain at their source paths because macOS blocked their removal from the Desktop; their unchanged canonical copies are present in `resumes/` and are what the website serves.
-- No destination file existed before transfer; overwrite protection was used for every move.
+- No source asset was overwritten; the earlier unused shared favicon is preserved as `favicon-legacy.svg`.
